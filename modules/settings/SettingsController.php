@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace NOC\Modules\Settings;
 
+use NOC\Core\Auth;
 use NOC\Core\Response;
 use NOC\Core\Session;
-use NOC\Core\Auth;
 
 /**
  * SettingsController — HTTP request handler for application settings.
@@ -33,46 +33,25 @@ final class SettingsController
     }
 
     /**
-     * GET /settings — show settings page.
+     * GET /settings — display settings form.
      */
-    public function index(array $params = []): never
+    public function index(): never
     {
         $settings = $this->service->getAll();
-        $user     = $this->auth->getCurrentUser();
 
         Response::view('settings/index', [
             'pageTitle' => 'Settings',
             'settings'  => $settings,
-            'user'      => $user,
+            'success'   => $this->session->getFlash('success'),
+            'error'     => $this->session->getFlash('error'),
             'csrf'      => $this->session->generateCsrfToken(),
-            'flash'     => $this->session->getFlash(),
         ]);
     }
 
     /**
-     * POST /settings — save settings.
+     * POST /settings — persist settings.
      */
-    public function update(array $params = []): never
-    {
-        $this->verifyCsrf();
-
-        $data   = $_POST;
-        $result = $this->service->saveAll($data);
-
-        if (!$result['success']) {
-            $this->session->setFlash('error', $result['message'] ?? 'Failed to save settings.');
-            Response::redirect('/settings');
-        }
-
-        $this->session->setFlash('success', 'Settings saved successfully.');
-        Response::redirect('/settings');
-    }
-
-    // -------------------------------------------------------------------------
-    // Helpers
-    // -------------------------------------------------------------------------
-
-    private function verifyCsrf(): void
+    public function update(): never
     {
         $token = (string) ($_POST['_csrf'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
 
@@ -80,5 +59,29 @@ final class SettingsController
             $this->session->setFlash('error', 'Security token expired. Please try again.');
             Response::redirect('/settings');
         }
+
+        // Only collect whitelisted keys from POST
+        $allowed = [
+            'app_name', 'mrtg_dir', 'mrtg_cfg_dir', 'mrtg_bin',
+            'snmp_community', 'snmp_version', 'snmp_timeout', 'snmp_retries', 'snmp_port',
+            'log_dir',
+        ];
+
+        $data = [];
+        foreach ($allowed as $key) {
+            if (isset($_POST[$key])) {
+                $data[$key] = trim((string) $_POST[$key]);
+            }
+        }
+
+        $ok = $this->service->saveAll($data);
+
+        if ($ok) {
+            $this->session->setFlash('success', 'Settings saved successfully.');
+        } else {
+            $this->session->setFlash('error', 'Failed to save settings. Check the database connection.');
+        }
+
+        Response::redirect('/settings');
     }
 }

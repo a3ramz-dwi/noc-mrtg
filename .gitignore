@@ -1,25 +1,31 @@
 # Environment
 .env
+.env.local
+.env.*.local
 
 # Composer
 /vendor/
 composer.lock
 
-# PHP logs and caches
-*.log
+# Logs
 /logs/
+*.log
 
-# OS / Editor
-.DS_Store
-Thumbs.db
+# MRTG generated files (managed at runtime)
+/mrtg-data/
+
+# IDE / Editor
 .idea/
 .vscode/
 *.swp
 *.swo
+*~
 
-# Generated MRTG files
-/var/www/mrtg/
+# macOS
+.DS_Store
 
-# Temp files
-/tmp/
-*.lock
+# PHP cache
+*.cache
+
+# Test coverage
+/coverage/

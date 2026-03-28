@@ -1,58 +1,74 @@
 <?php
 /**
- * PPPoE — Show (Detail) View
+ * PPPoE User Detail View
+ *
+ * @var array $session  PPPoE session record with traffic stats
  */
-/** @var array $user */
-/** @var array $router */
+$pageTitle = 'PPPoE: ' . htmlspecialchars($session['name'] ?? '');
 ?>
 <div id="pppoe-show-page">
 
-  <div class="d-flex align-items-center gap-2 mb-4">
-    <a href="/pppoe" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-left me-1"></i>Back</a>
-    <div>
-      <h4 class="mb-0">
-        <i class="fas fa-user me-2 text-primary"></i>
-        <?= htmlspecialchars($user['name'] ?? '') ?>
-      </h4>
-      <small class="text-muted"><?= htmlspecialchars($router['name'] ?? '') ?></small>
-    </div>
-    <div class="ms-auto">
-      <div class="form-check form-switch d-inline-flex align-items-center gap-2">
-        <label class="form-check-label text-muted">Monitor</label>
-        <input class="form-check-input toggle-monitor" type="checkbox"
-          data-id="<?= (int) $user['id'] ?>"
-          <?= (int) ($user['monitored'] ?? 0) === 1 ? 'checked' : '' ?>>
-      </div>
-    </div>
+  <div class="mb-4">
+    <a href="/pppoe" class="text-muted text-decoration-none small">
+      <i class="fas fa-arrow-left me-1"></i> Back to PPPoE Users
+    </a>
+    <h2 class="page-title mt-1">
+      <i class="fas fa-user me-2 text-info"></i>
+      <?= htmlspecialchars($session['name'] ?? 'PPPoE User') ?>
+    </h2>
   </div>
 
   <div class="row g-3">
     <div class="col-lg-4">
       <div class="card">
         <div class="card-header">
-          <h5 class="card-title"><i class="fas fa-info-circle me-2 text-info"></i>User Info</h5>
+          <h5 class="card-title mb-0"><i class="fas fa-info-circle me-2 text-info"></i>User Details</h5>
         </div>
         <div class="card-body">
-          <table class="table-dark-custom w-100">
-            <tbody>
-              <tr><td class="text-muted" style="width:45%">Username</td><td><?= htmlspecialchars($user['name'] ?? '') ?></td></tr>
-              <tr><td class="text-muted">IP Address</td><td><code><?= htmlspecialchars($user['ip_address'] ?? '—') ?></code></td></tr>
-              <tr><td class="text-muted">Interface</td><td><?= htmlspecialchars($user['interface_name'] ?? '—') ?></td></tr>
-              <tr><td class="text-muted">Router</td><td><?= htmlspecialchars($router['name'] ?? '') ?></td></tr>
-              <tr>
-                <td class="text-muted">Status</td>
-                <td>
-                  <?php
-                  $statusClass = ($user['status'] ?? '') === 'connected' ? 'badge-success' : 'badge-secondary';
-                  ?>
-                  <span class="badge <?= $statusClass ?>"><?= htmlspecialchars(ucfirst($user['status'] ?? 'unknown')) ?></span>
-                </td>
-              </tr>
-              <?php if (!empty($user['comment'])): ?>
-                <tr><td class="text-muted">Comment</td><td><?= htmlspecialchars($user['comment']) ?></td></tr>
-              <?php endif; ?>
-            </tbody>
-          </table>
+          <dl class="row mb-0">
+            <dt class="col-sm-5 text-muted">Router</dt>
+            <dd class="col-sm-7">
+              <a href="/routers/<?= (int) $session['router_id'] ?>">
+                <?= htmlspecialchars($session['router_name'] ?? '—') ?>
+              </a>
+            </dd>
+
+            <dt class="col-sm-5 text-muted">Username</dt>
+            <dd class="col-sm-7"><?= htmlspecialchars($session['name'] ?? '') ?></dd>
+
+            <dt class="col-sm-5 text-muted">IP Address</dt>
+            <dd class="col-sm-7"><code><?= htmlspecialchars($session['remote_address'] ?? '—') ?></code></dd>
+
+            <dt class="col-sm-5 text-muted">MAC Address</dt>
+            <dd class="col-sm-7"><code><?= htmlspecialchars($session['caller_id'] ?? '—') ?></code></dd>
+
+            <dt class="col-sm-5 text-muted">Service</dt>
+            <dd class="col-sm-7"><?= htmlspecialchars($session['service'] ?? '—') ?></dd>
+
+            <dt class="col-sm-5 text-muted">Profile</dt>
+            <dd class="col-sm-7"><?= htmlspecialchars($session['profile'] ?? '—') ?></dd>
+
+            <dt class="col-sm-5 text-muted">Status</dt>
+            <dd class="col-sm-7">
+              <?php $status = $session['status'] ?? 'disconnected'; ?>
+              <span class="badge bg-<?= $status === 'connected' ? 'success' : 'secondary' ?>">
+                <?= htmlspecialchars($status) ?>
+              </span>
+            </dd>
+
+            <dt class="col-sm-5 text-muted">Uptime</dt>
+            <dd class="col-sm-7"><?= htmlspecialchars($session['uptime'] ?? '—') ?></dd>
+
+            <dt class="col-sm-5 text-muted">Monitor</dt>
+            <dd class="col-sm-7">
+              <div class="form-check form-switch">
+                <input class="form-check-input toggle-monitor"
+                       type="checkbox"
+                       data-id="<?= (int) $session['id'] ?>"
+                       <?= !empty($session['monitored']) ? 'checked' : '' ?>>
+              </div>
+            </dd>
+          </dl>
         </div>
       </div>
     </div>
@@ -60,45 +76,20 @@
     <div class="col-lg-8">
       <div class="card">
         <div class="card-header">
-          <h5 class="card-title"><i class="fas fa-chart-area me-2 text-success"></i>Traffic History</h5>
-          <select id="chart-range" class="form-select form-select-sm" style="width:120px;">
-            <option value="24h">Last 24h</option>
-            <option value="7d">Last 7 days</option>
-            <option value="30d">Last 30 days</option>
-          </select>
+          <h5 class="card-title mb-0"><i class="fas fa-chart-area me-2 text-primary"></i>Traffic (24h)</h5>
         </div>
         <div class="card-body">
           <div class="chart-container" style="height:280px;">
-            <canvas id="pppoe-traffic-chart"></canvas>
-          </div>
-        </div>
-      </div>
-
-      <div class="card mt-3">
-        <div class="card-header">
-          <h5 class="card-title"><i class="fas fa-tachometer-alt me-2 text-warning"></i>Current Bandwidth</h5>
-          <span class="badge badge-success">LIVE</span>
-        </div>
-        <div class="card-body">
-          <div class="row text-center">
-            <div class="col-6">
-              <div class="bandwidth-display bandwidth-in" id="bw-in">0 bps</div>
-              <div class="text-muted small"><i class="fas fa-arrow-down me-1 text-success"></i>Download</div>
-            </div>
-            <div class="col-6">
-              <div class="bandwidth-display bandwidth-out" id="bw-out">0 bps</div>
-              <div class="text-muted small"><i class="fas fa-arrow-up me-1 text-danger"></i>Upload</div>
-            </div>
+            <canvas id="traffic-chart"></canvas>
           </div>
         </div>
       </div>
     </div>
   </div>
-
 </div>
 
 <script>
-const PPPOE_ID  = <?= (int) $user['id'] ?>;
-const ROUTER_ID = <?= (int) ($user['router_id'] ?? 0) ?>;
+const PPPOE_ID = <?= (int) $session['id'] ?>;
 </script>
-<?php $extraScripts = '<script src="' . APP_URL . '/assets/js/pppoe-manager.js"></script>'; ?>
+<script src="<?= APP_URL ?>/assets/js/charts.js" defer></script>
+<script src="<?= APP_URL ?>/assets/js/pppoe-manager.js" defer></script>

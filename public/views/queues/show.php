@@ -1,55 +1,88 @@
 <?php
 /**
- * Queues — Show (Detail) View
+ * Queue Detail View
+ *
+ * @var array $queue  Queue record with traffic stats
  */
-/** @var array $queue */
-/** @var array $router */
+$pageTitle = 'Queue: ' . htmlspecialchars($queue['name'] ?? '');
 ?>
 <div id="queue-show-page">
 
-  <div class="d-flex align-items-center gap-2 mb-4">
-    <a href="/queues" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-left me-1"></i>Back</a>
-    <div>
-      <h4 class="mb-0">
-        <i class="fas fa-layer-group me-2 text-primary"></i>
-        <?= htmlspecialchars($queue['name'] ?? '') ?>
-      </h4>
-      <small class="text-muted"><?= htmlspecialchars($router['name'] ?? '') ?></small>
-    </div>
-    <div class="ms-auto">
-      <div class="form-check form-switch d-inline-flex align-items-center gap-2">
-        <label class="form-check-label text-muted">Monitor</label>
-        <input class="form-check-input toggle-monitor" type="checkbox"
-          data-id="<?= (int) $queue['id'] ?>"
-          <?= (int) ($queue['monitored'] ?? 0) === 1 ? 'checked' : '' ?>>
-      </div>
-    </div>
+  <div class="mb-4">
+    <a href="/queues" class="text-muted text-decoration-none small">
+      <i class="fas fa-arrow-left me-1"></i> Back to Queues
+    </a>
+    <h2 class="page-title mt-1">
+      <i class="fas fa-layer-group me-2 text-warning"></i>
+      <?= htmlspecialchars($queue['name'] ?? 'Queue') ?>
+    </h2>
   </div>
 
   <div class="row g-3">
     <div class="col-lg-4">
       <div class="card">
         <div class="card-header">
-          <h5 class="card-title"><i class="fas fa-info-circle me-2 text-info"></i>Queue Info</h5>
+          <h5 class="card-title mb-0"><i class="fas fa-info-circle me-2 text-info"></i>Queue Details</h5>
         </div>
         <div class="card-body">
-          <table class="table-dark-custom w-100">
-            <tbody>
-              <tr><td class="text-muted" style="width:45%">Name</td><td><?= htmlspecialchars($queue['name'] ?? '') ?></td></tr>
-              <tr><td class="text-muted">Target</td><td><code><?= htmlspecialchars($queue['target'] ?? '') ?></code></td></tr>
-              <tr><td class="text-muted">Router</td><td><?= htmlspecialchars($router['name'] ?? '') ?></td></tr>
-              <?php if (!empty($queue['comment'])): ?>
-                <tr><td class="text-muted">Comment</td><td><?= htmlspecialchars($queue['comment']) ?></td></tr>
-              <?php endif; ?>
+          <dl class="row mb-0">
+            <dt class="col-sm-5 text-muted">Router</dt>
+            <dd class="col-sm-7">
+              <a href="/routers/<?= (int) $queue['router_id'] ?>">
+                <?= htmlspecialchars($queue['router_name'] ?? '—') ?>
+              </a>
+            </dd>
+
+            <dt class="col-sm-5 text-muted">Queue Name</dt>
+            <dd class="col-sm-7"><?= htmlspecialchars($queue['name'] ?? '') ?></dd>
+
+            <dt class="col-sm-5 text-muted">Target</dt>
+            <dd class="col-sm-7"><code><?= htmlspecialchars($queue['target'] ?? '—') ?></code></dd>
+
+            <dt class="col-sm-5 text-muted">Max Limit</dt>
+            <dd class="col-sm-7">
               <?php
-              $fmt = fn(int $b) => $b === 0 ? '—' : ($b >= 1_000_000 ? number_format($b / 1_000_000, 2) . ' Mbps' : number_format($b / 1_000, 0) . ' kbps');
+              $ul = $queue['max_limit_upload']   ?? null;
+              $dl = $queue['max_limit_download'] ?? null;
+              if ($ul !== null && $dl !== null) {
+                  echo htmlspecialchars($ul . ' / ' . $dl);
+              } elseif ($ul !== null) {
+                  echo htmlspecialchars($ul . ' / —');
+              } elseif ($dl !== null) {
+                  echo htmlspecialchars('— / ' . $dl);
+              } else {
+                  echo '—';
+              }
               ?>
-              <tr><td class="text-muted">Max Down</td><td><?= $fmt((int) ($queue['max_limit_down'] ?? 0)) ?></td></tr>
-              <tr><td class="text-muted">Max Up</td><td><?= $fmt((int) ($queue['max_limit_up'] ?? 0)) ?></td></tr>
-              <tr><td class="text-muted">Burst Down</td><td><?= $fmt((int) ($queue['burst_limit_down'] ?? 0)) ?></td></tr>
-              <tr><td class="text-muted">Burst Up</td><td><?= $fmt((int) ($queue['burst_limit_up'] ?? 0)) ?></td></tr>
-            </tbody>
-          </table>
+            </dd>
+
+            <dt class="col-sm-5 text-muted">Burst Limit</dt>
+            <dd class="col-sm-7">
+              <?php
+              $bul = $queue['burst_limit_upload']   ?? null;
+              $bdl = $queue['burst_limit_download'] ?? null;
+              if ($bul !== null && $bdl !== null) {
+                  echo htmlspecialchars($bul . ' / ' . $bdl);
+              } elseif ($bul !== null) {
+                  echo htmlspecialchars($bul . ' / —');
+              } elseif ($bdl !== null) {
+                  echo htmlspecialchars('— / ' . $bdl);
+              } else {
+                  echo '—';
+              }
+              ?>
+            </dd>
+
+            <dt class="col-sm-5 text-muted">Monitor</dt>
+            <dd class="col-sm-7">
+              <div class="form-check form-switch">
+                <input class="form-check-input toggle-monitor"
+                       type="checkbox"
+                       data-id="<?= (int) $queue['id'] ?>"
+                       <?= !empty($queue['monitored']) ? 'checked' : '' ?>>
+              </div>
+            </dd>
+          </dl>
         </div>
       </div>
     </div>
@@ -57,45 +90,20 @@
     <div class="col-lg-8">
       <div class="card">
         <div class="card-header">
-          <h5 class="card-title"><i class="fas fa-chart-area me-2 text-success"></i>Traffic History</h5>
-          <select id="chart-range" class="form-select form-select-sm" style="width:120px;">
-            <option value="24h">Last 24h</option>
-            <option value="7d">Last 7 days</option>
-            <option value="30d">Last 30 days</option>
-          </select>
+          <h5 class="card-title mb-0"><i class="fas fa-chart-area me-2 text-primary"></i>Traffic (24h)</h5>
         </div>
         <div class="card-body">
           <div class="chart-container" style="height:280px;">
-            <canvas id="queue-traffic-chart"></canvas>
-          </div>
-        </div>
-      </div>
-
-      <div class="card mt-3">
-        <div class="card-header">
-          <h5 class="card-title"><i class="fas fa-tachometer-alt me-2 text-warning"></i>Current Bandwidth</h5>
-          <span class="badge badge-success">LIVE</span>
-        </div>
-        <div class="card-body">
-          <div class="row text-center">
-            <div class="col-6">
-              <div class="bandwidth-display bandwidth-in" id="bw-in">0 bps</div>
-              <div class="text-muted small"><i class="fas fa-arrow-down me-1 text-success"></i>Download</div>
-            </div>
-            <div class="col-6">
-              <div class="bandwidth-display bandwidth-out" id="bw-out">0 bps</div>
-              <div class="text-muted small"><i class="fas fa-arrow-up me-1 text-danger"></i>Upload</div>
-            </div>
+            <canvas id="traffic-chart"></canvas>
           </div>
         </div>
       </div>
     </div>
   </div>
-
 </div>
 
 <script>
-const QUEUE_ID  = <?= (int) $queue['id'] ?>;
-const ROUTER_ID = <?= (int) ($queue['router_id'] ?? 0) ?>;
+const QUEUE_ID = <?= (int) $queue['id'] ?>;
 </script>
-<?php $extraScripts = '<script src="' . APP_URL . '/assets/js/queue-manager.js"></script>'; ?>
+<script src="<?= APP_URL ?>/assets/js/charts.js" defer></script>
+<script src="<?= APP_URL ?>/assets/js/queue-manager.js" defer></script>
