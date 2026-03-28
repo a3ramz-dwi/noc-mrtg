@@ -132,7 +132,7 @@ final class Response
      */
     public static function view(string $template, array $data = [], int $status = 200): never
     {
-        $viewDir  = defined('APP_DIR') ? APP_DIR . '/views' : self::VIEW_PATH;
+        $viewDir  = defined('VIEW_DIR') ? VIEW_DIR : (defined('APP_DIR') ? APP_DIR . '/public/views' : self::VIEW_PATH);
         $filePath = rtrim($viewDir, '/') . '/' . ltrim($template, '/') . '.php';
 
         if (!is_file($filePath)) {
@@ -183,7 +183,7 @@ final class Response
      */
     public static function renderToString(string $template, array $data = []): string
     {
-        $viewDir  = defined('APP_DIR') ? APP_DIR . '/views' : self::VIEW_PATH;
+        $viewDir  = defined('VIEW_DIR') ? VIEW_DIR : (defined('APP_DIR') ? APP_DIR . '/public/views' : self::VIEW_PATH);
         $filePath = rtrim($viewDir, '/') . '/' . ltrim($template, '/') . '.php';
 
         if (!is_file($filePath)) {
