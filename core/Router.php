@@ -117,12 +117,18 @@ final class Router
     /**
      * Match the incoming request and invoke the appropriate handler.
      *
-     * @param  string $method  HTTP verb (e.g. 'GET').
-     * @param  string $uri     Request URI path (query string should be stripped).
+     * When called without arguments the method and URI are read from the
+     * current super-globals ($_SERVER['REQUEST_METHOD'] and REQUEST_URI).
+     *
+     * @param  string|null $method  HTTP verb (e.g. 'GET'). Auto-detected when null.
+     * @param  string|null $uri     Request URI path. Auto-detected when null.
      * @return void
      */
-    public function dispatch(string $method, string $uri): void
+    public function dispatch(?string $method = null, ?string $uri = null): void
     {
+        $method = $method ?? ($_SERVER['REQUEST_METHOD'] ?? 'GET');
+        $uri    = $uri    ?? ($_SERVER['REQUEST_URI']    ?? '/');
+
         $method = strtoupper($method);
         $uri    = '/' . trim(parse_url($uri, PHP_URL_PATH) ?? $uri, '/');
 

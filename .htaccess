@@ -1,2 +1,17 @@
 Options -Indexes
-Deny from all
+
+# Deny direct access to sensitive directories
+RewriteEngine On
+
+# Allow access to public/ directory assets
+RewriteCond %{REQUEST_URI} ^/public/
+RewriteRule ^ - [L]
+
+# Deny access to sensitive files/dirs from root
+<FilesMatch "\.(env|log|sh|sql)$">
+    Deny from all
+</FilesMatch>
+
+<DirectoryMatch "^/(core|modules|config|database|docs|cron|snmp|mrtg|api)/">
+    Deny from all
+</DirectoryMatch>

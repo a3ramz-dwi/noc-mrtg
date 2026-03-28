@@ -51,7 +51,13 @@ final class MrtgController
             Response::success($configs);
         }
 
-        Response::view('mrtg/index', ['configs' => $configs]);
+        Response::view('mrtg/index', [
+            'configs'   => $configs,
+            'pageTitle' => 'MRTG Manager',
+            'csrf'      => $this->session->generateCsrfToken(),
+            'success'   => $this->session->getFlash('success'),
+            'error'     => $this->session->getFlash('error'),
+        ]);
     }
 
     // -------------------------------------------------------------------------

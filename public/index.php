@@ -1,28 +1,38 @@
 <?php
+
 declare(strict_types=1);
 
-$appDir = '/var/www/noc';
+// ---------------------------------------------------------------------------
+// Bootstrap
+// ---------------------------------------------------------------------------
+$appDir = dirname(__DIR__);
 require $appDir . '/config/app.php';
 
 use NOC\Core\Router;
-use NOC\Core\Auth;
-use NOC\Controllers\AuthController;
-use NOC\Controllers\DashboardController;
-use NOC\Controllers\RouterController;
-use NOC\Controllers\InterfaceController;
-use NOC\Controllers\QueueController;
-use NOC\Controllers\PppoeController;
-use NOC\Controllers\MonitoringController;
-use NOC\Controllers\MrtgController;
-use NOC\Controllers\SettingsController;
+use NOC\Core\Session;
+use NOC\Modules\Auth\AuthController;
+use NOC\Modules\Dashboard\DashboardController;
+use NOC\Modules\Routers\RouterController;
+use NOC\Modules\Interfaces\InterfaceController;
+use NOC\Modules\Queues\QueueController;
+use NOC\Modules\Pppoe\PppoeController;
+use NOC\Modules\Monitoring\MonitoringController;
+use NOC\Modules\Mrtg\MrtgController;
+use NOC\Modules\Settings\SettingsController;
 
-// Start session and check auth
-Auth::startSession();
+// ---------------------------------------------------------------------------
+// Start session
+// ---------------------------------------------------------------------------
+$session = new Session();
+$session->start();
 
+// ---------------------------------------------------------------------------
+// Route registration
+// ---------------------------------------------------------------------------
 $router = new Router();
 
 // Auth routes
-$router->get('/login', [AuthController::class, 'showLogin']);
+$router->get('/login',  [AuthController::class, 'showLogin']);
 $router->post('/login', [AuthController::class, 'login']);
 $router->get('/logout', [AuthController::class, 'logout']);
 
@@ -30,55 +40,57 @@ $router->get('/logout', [AuthController::class, 'logout']);
 $router->get('/', [DashboardController::class, 'index']);
 
 // Router routes
-$router->get('/routers', [RouterController::class, 'index']);
-$router->post('/routers', [RouterController::class, 'store']);
-$router->get('/routers/create', [RouterController::class, 'create']);
-$router->get('/routers/{id}', [RouterController::class, 'show']);
-$router->put('/routers/{id}', [RouterController::class, 'update']);
-$router->delete('/routers/{id}', [RouterController::class, 'destroy']);
-$router->get('/routers/{id}/edit', [RouterController::class, 'edit']);
-$router->post('/routers/{id}/test', [RouterController::class, 'testConnection']);
-$router->post('/routers/{id}/refresh', [RouterController::class, 'refreshInfo']);
+$router->get('/routers',                          [RouterController::class, 'index']);
+$router->get('/routers/create',                   [RouterController::class, 'create']);
+$router->post('/routers',                         [RouterController::class, 'store']);
+$router->get('/routers/{id}',                     [RouterController::class, 'show']);
+$router->put('/routers/{id}',                     [RouterController::class, 'update']);
+$router->delete('/routers/{id}',                  [RouterController::class, 'destroy']);
+$router->get('/routers/{id}/edit',                [RouterController::class, 'edit']);
+$router->post('/routers/{id}/test',               [RouterController::class, 'testConnection']);
+$router->post('/routers/{id}/refresh',            [RouterController::class, 'refreshInfo']);
 
 // Interface routes
-$router->get('/interfaces', [InterfaceController::class, 'index']);
-$router->get('/interfaces/{id}', [InterfaceController::class, 'show']);
+$router->get('/interfaces',                       [InterfaceController::class, 'index']);
+$router->get('/interfaces/{id}',                  [InterfaceController::class, 'show']);
 $router->get('/routers/{id}/interfaces/discover', [InterfaceController::class, 'discover']);
-$router->post('/interfaces/import', [InterfaceController::class, 'importSelected']);
-$router->post('/interfaces/{id}/toggle-monitor', [InterfaceController::class, 'toggleMonitor']);
-$router->delete('/interfaces/{id}', [InterfaceController::class, 'destroy']);
+$router->post('/interfaces/import',               [InterfaceController::class, 'importSelected']);
+$router->post('/interfaces/{id}/toggle-monitor',  [InterfaceController::class, 'toggleMonitor']);
+$router->delete('/interfaces/{id}',               [InterfaceController::class, 'destroy']);
 
 // Queue routes
-$router->get('/queues', [QueueController::class, 'index']);
-$router->get('/queues/{id}', [QueueController::class, 'show']);
-$router->get('/routers/{id}/queues/discover', [QueueController::class, 'discover']);
-$router->post('/queues/import', [QueueController::class, 'importSelected']);
-$router->post('/queues/{id}/toggle-monitor', [QueueController::class, 'toggleMonitor']);
-$router->delete('/queues/{id}', [QueueController::class, 'destroy']);
+$router->get('/queues',                           [QueueController::class, 'index']);
+$router->get('/queues/{id}',                      [QueueController::class, 'show']);
+$router->get('/routers/{id}/queues/discover',     [QueueController::class, 'discover']);
+$router->post('/queues/import',                   [QueueController::class, 'importSelected']);
+$router->post('/queues/{id}/toggle-monitor',      [QueueController::class, 'toggleMonitor']);
+$router->delete('/queues/{id}',                   [QueueController::class, 'destroy']);
 
 // PPPoE routes
-$router->get('/pppoe', [PppoeController::class, 'index']);
-$router->get('/pppoe/{id}', [PppoeController::class, 'show']);
-$router->get('/routers/{id}/pppoe/discover', [PppoeController::class, 'discover']);
-$router->post('/pppoe/import', [PppoeController::class, 'importSelected']);
-$router->post('/pppoe/{id}/toggle-monitor', [PppoeController::class, 'toggleMonitor']);
-$router->delete('/pppoe/{id}', [PppoeController::class, 'destroy']);
+$router->get('/pppoe',                            [PppoeController::class, 'index']);
+$router->get('/pppoe/{id}',                       [PppoeController::class, 'show']);
+$router->get('/routers/{id}/pppoe/discover',      [PppoeController::class, 'discover']);
+$router->post('/pppoe/import',                    [PppoeController::class, 'importSelected']);
+$router->post('/pppoe/{id}/toggle-monitor',       [PppoeController::class, 'toggleMonitor']);
+$router->delete('/pppoe/{id}',                    [PppoeController::class, 'destroy']);
 
 // Monitoring routes
-$router->get('/monitoring/interfaces', [MonitoringController::class, 'interfaces']);
-$router->get('/monitoring/queues', [MonitoringController::class, 'queues']);
-$router->get('/monitoring/pppoe', [MonitoringController::class, 'pppoe']);
-$router->get('/monitoring/live', [MonitoringController::class, 'live']);
-$router->get('/monitoring/live-data', [MonitoringController::class, 'liveData']);
-$router->get('/monitoring/chart-data/{type}/{id}', [MonitoringController::class, 'chartData']);
+$router->get('/monitoring/interfaces',            [MonitoringController::class, 'interfaces']);
+$router->get('/monitoring/queues',                [MonitoringController::class, 'queues']);
+$router->get('/monitoring/pppoe',                 [MonitoringController::class, 'pppoe']);
+$router->get('/monitoring/live',                  [MonitoringController::class, 'live']);
+$router->get('/monitoring/live-data',             [MonitoringController::class, 'liveData']);
+$router->get('/monitoring/chart-data/{type}/{id}',[MonitoringController::class, 'chartData']);
 
 // MRTG routes
-$router->get('/mrtg', [MrtgController::class, 'index']);
+$router->get('/mrtg',           [MrtgController::class, 'index']);
 $router->post('/mrtg/generate', [MrtgController::class, 'generate']);
 
-// Settings
-$router->get('/settings', [SettingsController::class, 'index']);
+// Settings routes
+$router->get('/settings',  [SettingsController::class, 'index']);
 $router->post('/settings', [SettingsController::class, 'update']);
 
-// Dispatch
+// ---------------------------------------------------------------------------
+// Dispatch — auto-detects method and URI from $_SERVER
+// ---------------------------------------------------------------------------
 $router->dispatch();

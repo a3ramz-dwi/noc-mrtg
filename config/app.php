@@ -131,3 +131,45 @@ ini_set('session.hash_function',        'sha256');
 $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
     || (isset($_SERVER['SERVER_PORT']) && (int) $_SERVER['SERVER_PORT'] === 443);
 ini_set('session.cookie_secure', $isHttps ? '1' : '0');
+
+// ---------------------------------------------------------------------------
+// View directory (relative to project root, inside public/)
+// ---------------------------------------------------------------------------
+defined('VIEW_DIR') || define('VIEW_DIR', APP_DIR . '/public/views');
+
+// ---------------------------------------------------------------------------
+// PSR-4 Autoloader
+// ---------------------------------------------------------------------------
+spl_autoload_register(static function (string $class): void {
+    $namespaceMap = [
+        'NOC\\Core\\'       => APP_DIR . '/core/',
+        'NOC\\Modules\\'    => APP_DIR . '/modules/',
+        'NOC\\SNMP\\'       => APP_DIR . '/snmp/',
+        'NOC\\MRTG\\'       => APP_DIR . '/mrtg/',
+    ];
+
+    foreach ($namespaceMap as $prefix => $baseDir) {
+        if (!str_starts_with($class, $prefix)) {
+            continue;
+        }
+
+        // Strip the namespace prefix and convert to a relative file path.
+        $relative = substr($class, strlen($prefix));
+
+        // For modules, the layout is NOC\Modules\{Module}\{ClassName}
+        // which maps to modules/{module}/{ClassName}.php
+        if ($prefix === 'NOC\\Modules\\') {
+            $parts     = explode('\\', $relative);
+            $subDir    = strtolower($parts[0]);
+            $className = implode('/', array_slice($parts, 1));
+            $file      = $baseDir . $subDir . '/' . $className . '.php';
+        } else {
+            $file = $baseDir . str_replace('\\', '/', $relative) . '.php';
+        }
+
+        if (is_file($file)) {
+            require_once $file;
+            return;
+        }
+    }
+});

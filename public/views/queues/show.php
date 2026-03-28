@@ -1,0 +1,84 @@
+<?php
+/**
+ * Queue Detail View
+ *
+ * @var array $queue  Queue record with traffic stats
+ */
+$pageTitle = 'Queue: ' . htmlspecialchars($queue['queue_name'] ?? '');
+?>
+<div id="queue-show-page">
+
+  <div class="mb-4">
+    <a href="/queues" class="text-muted text-decoration-none small">
+      <i class="fas fa-arrow-left me-1"></i> Back to Queues
+    </a>
+    <h2 class="page-title mt-1">
+      <i class="fas fa-layer-group me-2 text-warning"></i>
+      <?= htmlspecialchars($queue['queue_name'] ?? 'Queue') ?>
+    </h2>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-lg-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0"><i class="fas fa-info-circle me-2 text-info"></i>Queue Details</h5>
+        </div>
+        <div class="card-body">
+          <dl class="row mb-0">
+            <dt class="col-sm-5 text-muted">Router</dt>
+            <dd class="col-sm-7">
+              <a href="/routers/<?= (int) $queue['router_id'] ?>">
+                <?= htmlspecialchars($queue['router_name'] ?? '—') ?>
+              </a>
+            </dd>
+
+            <dt class="col-sm-5 text-muted">Queue Name</dt>
+            <dd class="col-sm-7"><?= htmlspecialchars($queue['queue_name'] ?? '') ?></dd>
+
+            <dt class="col-sm-5 text-muted">Target</dt>
+            <dd class="col-sm-7"><code><?= htmlspecialchars($queue['target'] ?? '—') ?></code></dd>
+
+            <dt class="col-sm-5 text-muted">Max Limit</dt>
+            <dd class="col-sm-7"><?= htmlspecialchars($queue['max_limit'] ?? '—') ?></dd>
+
+            <dt class="col-sm-5 text-muted">Burst Limit</dt>
+            <dd class="col-sm-7"><?= htmlspecialchars($queue['burst_limit'] ?? '—') ?></dd>
+
+            <dt class="col-sm-5 text-muted">Priority</dt>
+            <dd class="col-sm-7"><?= htmlspecialchars($queue['priority'] ?? '—') ?></dd>
+
+            <dt class="col-sm-5 text-muted">Monitor</dt>
+            <dd class="col-sm-7">
+              <div class="form-check form-switch">
+                <input class="form-check-input toggle-monitor"
+                       type="checkbox"
+                       data-id="<?= (int) $queue['id'] ?>"
+                       <?= !empty($queue['monitor']) ? 'checked' : '' ?>>
+              </div>
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="card-title mb-0"><i class="fas fa-chart-area me-2 text-primary"></i>Traffic (24h)</h5>
+        </div>
+        <div class="card-body">
+          <div class="chart-container" style="height:280px;">
+            <canvas id="traffic-chart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const QUEUE_ID = <?= (int) $queue['id'] ?>;
+</script>
+<script src="<?= APP_URL ?>/assets/js/charts.js" defer></script>
+<script src="<?= APP_URL ?>/assets/js/queue-manager.js" defer></script>

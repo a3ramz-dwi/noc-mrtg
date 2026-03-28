@@ -400,3 +400,12 @@ WHERE td.target_type = 'interface'
   AND DATE(td.timestamp) = CURDATE()
 GROUP BY td.target_id
 ORDER BY total_bytes DESC;
+
+-- TABLE: app_settings
+DROP TABLE IF EXISTS `app_settings`;
+CREATE TABLE `app_settings` (
+    `key`        VARCHAR(100)   NOT NULL,
+    `value`      TEXT           NOT NULL DEFAULT '',
+    `updated_at` TIMESTAMP      NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Application key-value settings store';
