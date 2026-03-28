@@ -34,7 +34,7 @@ VALUES
     (
         1,
         'admin',
-        '$2y$12$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',
+        '$2y$12$ClVfvOps21UFTtNl7tOOa.ExFThxKQWVe//Cj6Elrs2igePFwvVnS',
         'Administrator',
         'admin@noc.triraintiutama.local',
         'admin',
@@ -275,7 +275,7 @@ INSERT INTO `users`
 VALUES
     (
         'operator',
-        '$2y$12$pBjMKgOlCTG/2.9wvEhAr.oJuQxwJ7OzrCGzqKZ3MSqizAUiCRmry',
+        '$2y$12$7XzR/9SxIrNKIlEBJn4nXewgGlqOeLT06eOHkKxyUGoA/vaWwemfW',
         'NOC Operator',
         'operator@noc.triraintiutama.local',
         'operator',
@@ -295,7 +295,7 @@ INSERT INTO `users`
 VALUES
     (
         'viewer',
-        '$2y$12$Z4nxgaGKf3EGkrGNKv3LuO4lGQBc1qBX7/kTmVDsHT0E3y6BNKGBS',
+        '$2y$12$P5eu7KBOUm6.HLe97lx9U.f9LECxGmM.e6odJG9KusQnAz6rwb/5W',
         'NOC Viewer',
         'viewer@noc.triraintiutama.local',
         'viewer',

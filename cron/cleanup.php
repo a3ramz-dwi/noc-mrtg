@@ -13,7 +13,7 @@ if (PHP_SAPI !== 'cli') {
     exit(1);
 }
 
-$appDir = '/var/www/noc';
+$appDir = dirname(__DIR__);
 require $appDir . '/config/app.php';
 
 spl_autoload_register(static function (string $class) use ($appDir): void {
