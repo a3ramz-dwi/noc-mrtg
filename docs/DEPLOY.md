@@ -297,7 +297,7 @@ HOME=/var/www/noc
 # ── Monthly Aggregation ───────────────────────────────────────────────────────
 # Aggregate daily data into traffic_monthly table.
 # Runs 1st of month at 00:15.
-15 0 1 * *    www-data   /usr/bin/php8.3 /var/www/noc/cron/aggregate_weekly.php >> /var/log/noc/app.log 2>&1
+15 0 1 * *    www-data   /usr/bin/php8.3 /var/www/noc/cron/aggregate_monthly.php >> /var/log/noc/app.log 2>&1
 
 # ── Data Cleanup ──────────────────────────────────────────────────────────────
 # Purge raw traffic_data older than RETENTION_RAW_HOURS (default 72h).

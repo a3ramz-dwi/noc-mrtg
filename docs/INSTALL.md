@@ -340,6 +340,11 @@ date.timezone = Asia/Jakarta
 extension = snmp
 
 ; Security
+; Note: exec/shell_exec are disabled for web requests via Apache.
+; The CLI php.ini (conf.d/99-noc.ini) re-enables them for cron scripts
+; that must invoke /usr/bin/mrtg and snmpwalk. All shell arguments passed
+; to these functions in cron scripts are validated and escaped with
+; escapeshellarg() before use.
 open_basedir = /var/www/noc:/var/www/mrtg:/var/log/noc:/etc/mrtg:/tmp
 allow_url_fopen = Off
 allow_url_include = Off
