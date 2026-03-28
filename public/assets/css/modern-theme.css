@@ -1,0 +1,196 @@
+/* Modern Light Theme CSS */
+:root {
+  --ml-bg-primary: #f6f8fa;
+  --ml-bg-secondary: #ffffff;
+  --ml-bg-tertiary: #f0f2f5;
+  --ml-bg-card: #ffffff;
+  --ml-border-color: #d0d7de;
+  --ml-text-primary: #1f2328;
+  --ml-text-secondary: #57606a;
+  --ml-text-muted: #8c959f;
+  --ml-accent-blue: #0969da;
+  --ml-accent-green: #1a7f37;
+  --ml-accent-orange: #9a6700;
+  --ml-accent-red: #d1242f;
+  --ml-accent-purple: #6e40c9;
+  --ml-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  --ml-shadow-md: 0 4px 12px rgba(0,0,0,0.10);
+}
+
+[data-theme="light"], .light-mode {
+  --bg-primary: var(--ml-bg-primary);
+  --bg-secondary: var(--ml-bg-secondary);
+  --bg-tertiary: var(--ml-bg-tertiary);
+  --bg-card: var(--ml-bg-card);
+  --border-color: var(--ml-border-color);
+  --text-primary: var(--ml-text-primary);
+  --text-secondary: var(--ml-text-secondary);
+  --text-muted: var(--ml-text-muted);
+  --accent-blue: var(--ml-accent-blue);
+  --accent-green: var(--ml-accent-green);
+  --accent-orange: var(--ml-accent-orange);
+  --accent-red: var(--ml-accent-red);
+  --accent-purple: var(--ml-accent-purple);
+}
+
+.light-mode body {
+  background-color: var(--ml-bg-primary);
+  color: var(--ml-text-primary);
+}
+
+.light-mode .sidebar {
+  background: var(--ml-bg-secondary);
+  border-right-color: var(--ml-border-color);
+  box-shadow: var(--ml-shadow-md);
+}
+
+.light-mode .sidebar-brand {
+  border-bottom-color: var(--ml-border-color);
+}
+
+.light-mode .nav-link { color: var(--ml-text-secondary); }
+.light-mode .nav-link:hover { background: var(--ml-bg-tertiary); color: var(--ml-text-primary); }
+.light-mode .nav-link.active { color: var(--ml-accent-blue); background: rgba(9,105,218,0.08); border-right-color: var(--ml-accent-blue); }
+
+.light-mode .navbar {
+  background: var(--ml-bg-secondary);
+  border-bottom-color: var(--ml-border-color);
+  box-shadow: var(--ml-shadow);
+}
+
+.light-mode .card {
+  background: var(--ml-bg-card);
+  border-color: var(--ml-border-color);
+  box-shadow: var(--ml-shadow);
+}
+
+.light-mode .card-header {
+  background: var(--ml-bg-tertiary);
+  border-bottom-color: var(--ml-border-color);
+}
+
+.light-mode .stat-card {
+  background: var(--ml-bg-card);
+  border-color: var(--ml-border-color);
+  box-shadow: var(--ml-shadow);
+}
+
+.light-mode .stat-value { color: var(--ml-text-primary); }
+.light-mode .stat-label { color: var(--ml-text-muted); }
+
+.light-mode .table thead th {
+  background: var(--ml-bg-tertiary);
+  color: var(--ml-text-muted);
+  border-bottom-color: var(--ml-border-color);
+}
+
+.light-mode .table td {
+  border-bottom-color: var(--ml-border-color);
+  color: var(--ml-text-primary);
+}
+
+.light-mode .form-control {
+  background: var(--ml-bg-secondary);
+  border-color: var(--ml-border-color);
+  color: var(--ml-text-primary);
+}
+
+.light-mode .form-control:focus {
+  border-color: var(--ml-accent-blue);
+  box-shadow: 0 0 0 3px rgba(9,105,218,0.15);
+}
+
+.light-mode .btn-secondary {
+  background: var(--ml-bg-tertiary);
+  border-color: var(--ml-border-color);
+  color: var(--ml-text-secondary);
+}
+
+.light-mode .btn-secondary:hover {
+  background: var(--ml-border-color);
+  color: var(--ml-text-primary);
+}
+
+.light-mode .btn-icon {
+  background: var(--ml-bg-tertiary);
+  border-color: var(--ml-border-color);
+  color: var(--ml-text-secondary);
+}
+
+/* Light mode badges */
+.light-mode .badge-online { background: rgba(26,127,55,0.1); color: var(--ml-accent-green); border-color: rgba(26,127,55,0.3); }
+.light-mode .badge-offline { background: rgba(209,36,47,0.1); color: var(--ml-accent-red); border-color: rgba(209,36,47,0.3); }
+.light-mode .badge-warning { background: rgba(154,103,0,0.1); color: var(--ml-accent-orange); border-color: rgba(154,103,0,0.3); }
+.light-mode .badge-info { background: rgba(9,105,218,0.1); color: var(--ml-accent-blue); border-color: rgba(9,105,218,0.3); }
+
+/* Light pagination */
+.light-mode .page-link {
+  background-color: var(--ml-bg-secondary);
+  border-color: var(--ml-border-color);
+  color: var(--ml-accent-blue);
+}
+
+.light-mode .page-item.active .page-link {
+  background-color: var(--ml-accent-blue);
+  border-color: var(--ml-accent-blue);
+}
+
+/* Light modal */
+.light-mode .modal-content {
+  background: var(--ml-bg-secondary);
+  border-color: var(--ml-border-color);
+  color: var(--ml-text-primary);
+}
+
+.light-mode .modal-header, .light-mode .modal-footer {
+  background: var(--ml-bg-tertiary);
+  border-color: var(--ml-border-color);
+}
+
+/* Light dropdown */
+.light-mode .dropdown-menu {
+  background: var(--ml-bg-secondary);
+  border-color: var(--ml-border-color);
+  box-shadow: var(--ml-shadow-md);
+}
+
+.light-mode .dropdown-item { color: var(--ml-text-primary); }
+.light-mode .dropdown-item:hover { background: var(--ml-bg-tertiary); }
+
+/* Light router cards */
+.light-mode .router-card {
+  background: var(--ml-bg-card);
+  border-color: var(--ml-border-color);
+  box-shadow: var(--ml-shadow);
+}
+
+.light-mode .router-card:hover { border-color: var(--ml-accent-blue); }
+
+/* Light footer */
+.light-mode .footer { border-top-color: var(--ml-border-color); color: var(--ml-text-muted); }
+
+/* Light alerts */
+.light-mode .alert-success { background: rgba(26,127,55,0.08); border-color: rgba(26,127,55,0.25); color: var(--ml-accent-green); }
+.light-mode .alert-danger { background: rgba(209,36,47,0.08); border-color: rgba(209,36,47,0.25); color: var(--ml-accent-red); }
+.light-mode .alert-warning { background: rgba(154,103,0,0.08); border-color: rgba(154,103,0,0.25); color: var(--ml-accent-orange); }
+.light-mode .alert-info { background: rgba(9,105,218,0.08); border-color: rgba(9,105,218,0.25); color: var(--ml-accent-blue); }
+
+/* Light scrollbar */
+.light-mode ::-webkit-scrollbar-track { background: var(--ml-bg-tertiary); }
+.light-mode ::-webkit-scrollbar-thumb { background: var(--ml-border-color); }
+.light-mode ::-webkit-scrollbar-thumb:hover { background: var(--ml-text-muted); }
+
+/* Light live ticker */
+.light-mode .live-ticker {
+  background: var(--ml-bg-tertiary);
+  border-color: var(--ml-border-color);
+}
+
+/* Light nav section titles */
+.light-mode .nav-section-title { color: var(--ml-text-muted); }
+
+/* Light hr */
+.light-mode hr { border-color: var(--ml-border-color); }
+
+/* Light progress */
+.light-mode .progress { background-color: var(--ml-bg-tertiary); }
