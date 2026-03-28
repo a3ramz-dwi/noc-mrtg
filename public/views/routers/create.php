@@ -54,7 +54,7 @@ $pageTitle = 'Add Router';
           <div class="col-md-3 mb-3">
             <label class="form-label" for="snmp_version">SNMP Version</label>
             <select class="form-select" id="snmp_version" name="snmp_version">
-              <?php foreach (['1', '2c', '3'] as $v): ?>
+              <?php foreach (['1', '2c'] as $v): ?>
                 <option value="<?= $v ?>" <?= ($old['snmp_version'] ?? '2c') === $v ? 'selected' : '' ?>>
                   v<?= $v ?>
                 </option>

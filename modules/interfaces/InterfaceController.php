@@ -7,6 +7,7 @@ namespace NOC\Modules\Interfaces;
 use NOC\Core\Response;
 use NOC\Core\Session;
 use NOC\Core\Auth;
+use NOC\Modules\Routers\RouterModel;
 
 /**
  * InterfaceController — HTTP request handler for the Interfaces module.
@@ -52,9 +53,12 @@ final class InterfaceController
             Response::success($interfaces);
         }
 
+        $routers = (new RouterModel())->findAll();
+
         Response::view('interfaces/index', [
             'interfaces' => $interfaces,
             'router_id'  => $routerId,
+            'routers'    => $routers,
         ]);
     }
 
@@ -101,7 +105,39 @@ final class InterfaceController
     // -------------------------------------------------------------------------
 
     /**
-     * GET /interfaces/discover/{routerId} — AJAX: discover interfaces via SNMP.
+     * GET /routers/{id}/interfaces/discover — HTML page: discover interfaces via SNMP.
+     */
+    public function discoverPage(int $routerId): never
+    {
+        $router = (new RouterModel())->findById($routerId);
+
+        if ($router === null) {
+            $this->session->setFlash('error', 'Router not found.');
+            Response::redirect('/interfaces');
+        }
+
+        $discovered = $this->service->discoverInterfaces($routerId);
+
+        $existing    = $this->model->findByRouter($routerId);
+        $existingIdx = array_flip(array_column($existing, 'if_index'));
+
+        if (is_array($discovered)) {
+            foreach ($discovered as &$iface) {
+                $iface['imported'] = isset($existingIdx[(int) $iface['if_index']]);
+            }
+            unset($iface);
+        }
+
+        Response::view('interfaces/discover', [
+            'router'     => $router,
+            'discovered' => is_array($discovered) ? $discovered : [],
+            'error'      => $discovered === false ? 'SNMP discovery failed. Check router SNMP settings.' : null,
+            'csrf'       => $this->session->generateCsrfToken(),
+        ]);
+    }
+
+    /**
+     * GET /routers/{id}/interfaces/discover — AJAX: discover interfaces via SNMP.
      */
     public function discover(int $routerId): never
     {

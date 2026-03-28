@@ -58,14 +58,14 @@ $pageTitle = 'Router: ' . htmlspecialchars($router['name'] ?? '');
             </dd>
 
             <dt class="col-sm-4 text-muted">System Name</dt>
-            <dd class="col-sm-8"><?= htmlspecialchars($router['sys_name'] ?? '—') ?></dd>
+            <dd class="col-sm-8"><?= htmlspecialchars($router['identity'] ?? '—') ?></dd>
 
             <dt class="col-sm-4 text-muted">System Description</dt>
-            <dd class="col-sm-8 text-muted small"><?= htmlspecialchars($router['sys_descr'] ?? '—') ?></dd>
+            <dd class="col-sm-8 text-muted small"><?= htmlspecialchars($router['model'] ?? '—') ?></dd>
 
             <dt class="col-sm-4 text-muted">Last Polled</dt>
             <dd class="col-sm-8 text-muted small">
-              <?= $router['last_polled'] ? htmlspecialchars($router['last_polled']) : '—' ?>
+              <?= $router['last_seen'] ? htmlspecialchars($router['last_seen']) : '—' ?>
             </dd>
 
             <dt class="col-sm-4 text-muted">Created</dt>
@@ -126,9 +126,9 @@ $pageTitle = 'Router: ' . htmlspecialchars($router['name'] ?? '');
                   <?php foreach ($router['interfaces'] as $iface): ?>
                     <tr>
                       <td><?= (int) $iface['if_index'] ?></td>
-                      <td><a href="/interfaces/<?= (int) $iface['id'] ?>"><?= htmlspecialchars($iface['if_name'] ?? '') ?></a></td>
-                      <td class="text-muted small"><?= htmlspecialchars($iface['if_alias'] ?? '') ?></td>
-                      <td class="text-muted small"><?= htmlspecialchars($iface['if_speed'] ?? '') ?></td>
+                      <td><a href="/interfaces/<?= (int) $iface['id'] ?>"><?= htmlspecialchars($iface['name'] ?? '') ?></a></td>
+                      <td class="text-muted small"><?= htmlspecialchars($iface['alias'] ?? '') ?></td>
+                      <td class="text-muted small"><?= htmlspecialchars($iface['speed'] ?? '') ?></td>
                       <td>
                         <?php $os = (int) ($iface['oper_status'] ?? 0); ?>
                         <span class="badge bg-<?= $os === 1 ? 'success' : 'secondary' ?>">
@@ -136,7 +136,7 @@ $pageTitle = 'Router: ' . htmlspecialchars($router['name'] ?? '');
                         </span>
                       </td>
                       <td>
-                        <?= $iface['monitor'] ? '<i class="fas fa-eye text-success"></i>' : '<i class="fas fa-eye-slash text-secondary"></i>' ?>
+                        <?= $iface['monitored'] ? '<i class="fas fa-eye text-success"></i>' : '<i class="fas fa-eye-slash text-secondary"></i>' ?>
                       </td>
                     </tr>
                   <?php endforeach; ?>

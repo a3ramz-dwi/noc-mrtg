@@ -2,8 +2,8 @@
 /**
  * PPPoE Users Index View
  *
- * @var array $users    List of PPPoE user records
- * @var array $routers  List of routers for discover links
+ * @var array $sessions  List of PPPoE session records
+ * @var array $routers   List of routers for discover links
  */
 $pageTitle = 'PPPoE Users';
 ?>
@@ -34,7 +34,7 @@ $pageTitle = 'PPPoE Users';
   <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
       <h5 class="card-title mb-0"><i class="fas fa-users me-2"></i>All PPPoE Users</h5>
-      <span class="badge bg-info"><?= count($users ?? []) ?> total</span>
+      <span class="badge bg-info"><?= count($sessions ?? []) ?> total</span>
     </div>
     <div class="card-body p-0">
       <div class="table-responsive">
@@ -52,7 +52,7 @@ $pageTitle = 'PPPoE Users';
             </tr>
           </thead>
           <tbody>
-            <?php if (empty($users)): ?>
+            <?php if (empty($sessions)): ?>
               <tr>
                 <td colspan="8" class="text-center text-muted py-4">
                   <i class="fas fa-info-circle me-1"></i>
@@ -60,7 +60,7 @@ $pageTitle = 'PPPoE Users';
                 </td>
               </tr>
             <?php else: ?>
-              <?php foreach ($users as $u): ?>
+              <?php foreach ($sessions as $u): ?>
                 <tr>
                   <td><?= (int) $u['id'] ?></td>
                   <td>
@@ -70,10 +70,10 @@ $pageTitle = 'PPPoE Users';
                   </td>
                   <td>
                     <a href="/pppoe/<?= (int) $u['id'] ?>">
-                      <?= htmlspecialchars($u['username'] ?? '') ?>
+                      <?= htmlspecialchars($u['name'] ?? '') ?>
                     </a>
                   </td>
-                  <td><code><?= htmlspecialchars($u['ip_address'] ?? '—') ?></code></td>
+                  <td><code><?= htmlspecialchars($u['remote_address'] ?? '—') ?></code></td>
                   <td class="text-muted small"><?= htmlspecialchars($u['service'] ?? '—') ?></td>
                   <td>
                     <?php $status = $u['status'] ?? 'disconnected'; ?>
@@ -86,7 +86,7 @@ $pageTitle = 'PPPoE Users';
                       <input class="form-check-input toggle-monitor"
                              type="checkbox"
                              data-id="<?= (int) $u['id'] ?>"
-                             <?= !empty($u['monitor']) ? 'checked' : '' ?>>
+                             <?= !empty($u['monitored']) ? 'checked' : '' ?>>
                     </div>
                   </td>
                   <td class="text-end">

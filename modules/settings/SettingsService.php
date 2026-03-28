@@ -83,7 +83,7 @@ final class SettingsService
             $this->logger->info('Settings saved.', ['keys' => array_keys($settings)]);
             return true;
         } catch (\Throwable $e) {
-            $this->db->rollBack();
+            $this->db->rollback();
             $this->logger->error('Failed to save settings.', ['error' => $e->getMessage()]);
             return false;
         }

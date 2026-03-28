@@ -162,13 +162,13 @@ final class RouterService
     }
 
     /**
-     * Return all routers with status information.
+     * Return all routers with status information and interface counts.
      *
      * @return array<int,array<string,mixed>>
      */
     public function listRouters(): array
     {
-        return $this->model->findAll();
+        return $this->model->findAllWithStats();
     }
 
     // -------------------------------------------------------------------------

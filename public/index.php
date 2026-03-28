@@ -53,7 +53,7 @@ $router->post('/routers/{id}/refresh',            [RouterController::class, 'ref
 // Interface routes
 $router->get('/interfaces',                       [InterfaceController::class, 'index']);
 $router->get('/interfaces/{id}',                  [InterfaceController::class, 'show']);
-$router->get('/routers/{id}/interfaces/discover', [InterfaceController::class, 'discover']);
+$router->get('/routers/{id}/interfaces/discover', [InterfaceController::class, 'discoverPage']);
 $router->post('/interfaces/import',               [InterfaceController::class, 'importSelected']);
 $router->post('/interfaces/{id}/toggle-monitor',  [InterfaceController::class, 'toggleMonitor']);
 $router->delete('/interfaces/{id}',               [InterfaceController::class, 'destroy']);
@@ -61,7 +61,7 @@ $router->delete('/interfaces/{id}',               [InterfaceController::class, '
 // Queue routes
 $router->get('/queues',                           [QueueController::class, 'index']);
 $router->get('/queues/{id}',                      [QueueController::class, 'show']);
-$router->get('/routers/{id}/queues/discover',     [QueueController::class, 'discover']);
+$router->get('/routers/{id}/queues/discover',     [QueueController::class, 'discoverPage']);
 $router->post('/queues/import',                   [QueueController::class, 'importSelected']);
 $router->post('/queues/{id}/toggle-monitor',      [QueueController::class, 'toggleMonitor']);
 $router->delete('/queues/{id}',                   [QueueController::class, 'destroy']);
@@ -69,7 +69,7 @@ $router->delete('/queues/{id}',                   [QueueController::class, 'dest
 // PPPoE routes
 $router->get('/pppoe',                            [PppoeController::class, 'index']);
 $router->get('/pppoe/{id}',                       [PppoeController::class, 'show']);
-$router->get('/routers/{id}/pppoe/discover',      [PppoeController::class, 'discover']);
+$router->get('/routers/{id}/pppoe/discover',      [PppoeController::class, 'discoverPage']);
 $router->post('/pppoe/import',                    [PppoeController::class, 'importSelected']);
 $router->post('/pppoe/{id}/toggle-monitor',       [PppoeController::class, 'toggleMonitor']);
 $router->delete('/pppoe/{id}',                    [PppoeController::class, 'destroy']);
@@ -83,8 +83,12 @@ $router->get('/monitoring/live-data',             [MonitoringController::class, 
 $router->get('/monitoring/chart-data/{type}/{id}',[MonitoringController::class, 'chartData']);
 
 // MRTG routes
-$router->get('/mrtg',           [MrtgController::class, 'index']);
-$router->post('/mrtg/generate', [MrtgController::class, 'generate']);
+$router->get('/mrtg',                    [MrtgController::class, 'index']);
+$router->get('/mrtg/{id}',               [MrtgController::class, 'viewConfig']);
+$router->get('/mrtg/{id}/view',          [MrtgController::class, 'viewConfig']);
+$router->get('/mrtg/{id}/download',      [MrtgController::class, 'download']);
+$router->post('/mrtg/generate',          [MrtgController::class, 'generate']);
+$router->post('/mrtg/generate-all',      [MrtgController::class, 'generateAll']);
 
 // Settings routes
 $router->get('/settings',  [SettingsController::class, 'index']);

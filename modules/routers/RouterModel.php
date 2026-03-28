@@ -41,6 +41,24 @@ final class RouterModel
     }
 
     /**
+     * Return every router row ordered by name, including aggregated interface count.
+     *
+     * @return array<int,array<string,mixed>>
+     */
+    public function findAllWithStats(): array
+    {
+        return $this->db->fetchAll(
+            'SELECT r.*,
+                    COUNT(DISTINCT i.id) AS interface_count,
+                    r.updated_at         AS last_seen
+               FROM `routers` r
+               LEFT JOIN `interfaces` i ON i.`router_id` = r.`id`
+              GROUP BY r.`id`
+              ORDER BY r.`name` ASC',
+        );
+    }
+
+    /**
      * Return a single router by primary key, or null if not found.
      *
      * @param  int $id
@@ -55,9 +73,7 @@ final class RouterModel
     }
 
     /**
-     * Return a router with aggregated counts from related tables.
-     *
-     * Uses the v_router_summary view for convenience.
+     * Return a router with aggregated counts and all router columns.
      *
      * @param  int $id
      * @return array<string,mixed>|null
@@ -65,7 +81,19 @@ final class RouterModel
     public function findWithStats(int $id): ?array
     {
         return $this->db->fetch(
-            'SELECT * FROM `v_router_summary` WHERE `id` = ? LIMIT 1',
+            'SELECT r.*,
+                    COUNT(DISTINCT i.id)   AS interface_count,
+                    COUNT(DISTINCT sq.id)  AS queue_count,
+                    COUNT(DISTINCT pu.id)  AS pppoe_active_count,
+                    r.updated_at           AS last_seen
+               FROM `routers` r
+               LEFT JOIN `interfaces`    i  ON i.`router_id`  = r.`id`
+               LEFT JOIN `simple_queues` sq ON sq.`router_id` = r.`id`
+               LEFT JOIN `pppoe_users`   pu ON pu.`router_id` = r.`id`
+                                           AND pu.`status`    = \'connected\'
+              WHERE r.`id` = ?
+              GROUP BY r.`id`
+              LIMIT 1',
             [$id],
         );
     }

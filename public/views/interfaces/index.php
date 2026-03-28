@@ -62,11 +62,11 @@ $pageTitle = 'Interfaces';
                   <td><?= (int) $iface['if_index'] ?></td>
                   <td>
                     <a href="/interfaces/<?= (int) $iface['id'] ?>">
-                      <?= htmlspecialchars($iface['if_name'] ?? '') ?>
+                      <?= htmlspecialchars($iface['name'] ?? '') ?>
                     </a>
                   </td>
-                  <td class="text-muted small"><?= htmlspecialchars($iface['if_alias'] ?? '') ?></td>
-                  <td class="text-muted small"><?= htmlspecialchars($iface['if_speed'] ?? '') ?></td>
+                  <td class="text-muted small"><?= htmlspecialchars($iface['alias'] ?? '') ?></td>
+                  <td class="text-muted small"><?= htmlspecialchars($iface['speed'] ?? '') ?></td>
                   <td>
                     <?php $os = (int) ($iface['oper_status'] ?? 0); ?>
                     <span class="badge bg-<?= $os === 1 ? 'success' : 'secondary' ?>">
@@ -78,7 +78,7 @@ $pageTitle = 'Interfaces';
                       <input class="form-check-input toggle-monitor"
                              type="checkbox"
                              data-id="<?= (int) $iface['id'] ?>"
-                             <?= !empty($iface['monitor']) ? 'checked' : '' ?>>
+                             <?= !empty($iface['monitored']) ? 'checked' : '' ?>>
                     </div>
                   </td>
                   <td class="text-end">

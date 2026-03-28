@@ -4,7 +4,8 @@
  *
  * @var array $config  MRTG config record with file content
  */
-$pageTitle = 'MRTG Config: ' . htmlspecialchars($config['target_key'] ?? '');
+$configFile = basename((string) ($config['filename'] ?? ''));
+$pageTitle   = 'MRTG Config: ' . htmlspecialchars($configFile ?: 'unknown');
 ?>
 <div id="mrtg-view-page">
 
@@ -14,7 +15,7 @@ $pageTitle = 'MRTG Config: ' . htmlspecialchars($config['target_key'] ?? '');
     </a>
     <h2 class="page-title mt-1">
       <i class="fas fa-file-code me-2 text-primary"></i>
-      <?= htmlspecialchars($config['target_key'] ?? 'MRTG Config') ?>
+      <?= htmlspecialchars($configFile ?: 'MRTG Config') ?>
     </h2>
   </div>
 
@@ -26,8 +27,8 @@ $pageTitle = 'MRTG Config: ' . htmlspecialchars($config['target_key'] ?? '');
         </div>
         <div class="card-body">
           <dl class="row mb-0">
-            <dt class="col-sm-5 text-muted">Target Key</dt>
-            <dd class="col-sm-7"><code><?= htmlspecialchars($config['target_key'] ?? '') ?></code></dd>
+            <dt class="col-sm-5 text-muted">Config File</dt>
+            <dd class="col-sm-7"><code><?= htmlspecialchars($configFile ?: '—') ?></code></dd>
 
             <dt class="col-sm-5 text-muted">Type</dt>
             <dd class="col-sm-7">
@@ -42,17 +43,9 @@ $pageTitle = 'MRTG Config: ' . htmlspecialchars($config['target_key'] ?? '');
               </span>
             </dd>
 
-            <dt class="col-sm-5 text-muted">Description</dt>
-            <dd class="col-sm-7 text-muted small"><?= htmlspecialchars($config['description'] ?? '—') ?></dd>
-
-            <dt class="col-sm-5 text-muted">Config File</dt>
-            <dd class="col-sm-7 text-muted small">
-              <code><?= htmlspecialchars($config['config_file'] ?? '—') ?></code>
-            </dd>
-
             <dt class="col-sm-5 text-muted">Last Generated</dt>
             <dd class="col-sm-7 text-muted small">
-              <?= $config['last_generated'] ? htmlspecialchars($config['last_generated']) : '—' ?>
+              <?= $config['generated_at'] ? htmlspecialchars($config['generated_at']) : '—' ?>
             </dd>
           </dl>
         </div>

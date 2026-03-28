@@ -46,9 +46,8 @@ $pageTitle = 'Discover Queues: ' . htmlspecialchars($router['name'] ?? '');
                   <th width="40"><input type="checkbox" id="check-all" class="form-check-input"></th>
                   <th>Queue Name</th>
                   <th>Target</th>
-                  <th>Max Limit</th>
-                  <th>Burst Limit</th>
-                  <th>Priority</th>
+                  <th>Max Limit Upload</th>
+                  <th>Max Limit Download</th>
                   <th>Imported</th>
                 </tr>
               </thead>
@@ -58,18 +57,17 @@ $pageTitle = 'Discover Queues: ' . htmlspecialchars($router['name'] ?? '');
                     <td>
                       <?php if (empty($q['imported'])): ?>
                         <input type="checkbox"
-                               name="queues[]"
-                               value="<?= htmlspecialchars($q['queue_name']) ?>"
+                               name="queue_indexes[]"
+                               value="<?= (int) ($q['queue_index'] ?? 0) ?>"
                                class="form-check-input queue-check">
                       <?php else: ?>
                         <i class="fas fa-check text-success"></i>
                       <?php endif; ?>
                     </td>
-                    <td><?= htmlspecialchars($q['queue_name'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($q['name'] ?? '') ?></td>
                     <td class="text-muted small"><?= htmlspecialchars($q['target'] ?? '') ?></td>
-                    <td class="text-muted small"><?= htmlspecialchars($q['max_limit'] ?? '') ?></td>
-                    <td class="text-muted small"><?= htmlspecialchars($q['burst_limit'] ?? '') ?></td>
-                    <td class="text-muted small"><?= htmlspecialchars($q['priority'] ?? '') ?></td>
+                    <td class="text-muted small"><?= htmlspecialchars((string) ($q['max_limit_upload'] ?? '')) ?></td>
+                    <td class="text-muted small"><?= htmlspecialchars((string) ($q['max_limit_download'] ?? '')) ?></td>
                     <td><?= !empty($q['imported']) ? '<span class="badge bg-info">Yes</span>' : '—' ?></td>
                   </tr>
                 <?php endforeach; ?>

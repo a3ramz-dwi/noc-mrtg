@@ -7,6 +7,7 @@ namespace NOC\Modules\Pppoe;
 use NOC\Core\Response;
 use NOC\Core\Session;
 use NOC\Core\Auth;
+use NOC\Modules\Routers\RouterModel;
 
 /**
  * PppoeController — HTTP request handler for the PPPoE module.
@@ -52,9 +53,12 @@ final class PppoeController
             Response::success($sessions);
         }
 
+        $routers = (new RouterModel())->findAll();
+
         Response::view('pppoe/index', [
             'sessions'  => $sessions,
             'router_id' => $routerId,
+            'routers'   => $routers,
         ]);
     }
 
@@ -98,6 +102,38 @@ final class PppoeController
     // -------------------------------------------------------------------------
 
     /**
+     * GET /routers/{id}/pppoe/discover — HTML page: discover PPPoE sessions via SNMP.
+     */
+    public function discoverPage(int $routerId): never
+    {
+        $router = (new RouterModel())->findById($routerId);
+
+        if ($router === null) {
+            $this->session->setFlash('error', 'Router not found.');
+            Response::redirect('/pppoe');
+        }
+
+        $discovered = $this->service->discoverPppoe($routerId);
+
+        $existing     = $this->model->findByRouter($routerId);
+        $existingNames = array_flip(array_column($existing, 'name'));
+
+        if (is_array($discovered)) {
+            foreach ($discovered as &$u) {
+                $u['imported'] = isset($existingNames[(string) $u['name']]);
+            }
+            unset($u);
+        }
+
+        Response::view('pppoe/discover', [
+            'router'     => $router,
+            'discovered' => is_array($discovered) ? $discovered : [],
+            'error'      => $discovered === false ? 'SNMP discovery failed. Check router SNMP settings.' : null,
+            'csrf'       => $this->session->generateCsrfToken(),
+        ]);
+    }
+
+    /**
      * GET /pppoe/discover/{routerId} — AJAX: discover PPPoE sessions via SNMP.
      */
     public function discover(int $routerId): never
@@ -125,6 +161,48 @@ final class PppoeController
             $result['upserted'],
             $result['disconnected'],
         ));
+    }
+
+    /**
+     * POST /pppoe/import — import selected PPPoE sessions by name.
+     *
+     * Expects: router_id (int), pppoe_names[] (array of strings).
+     */
+    public function importSelected(): never
+    {
+        $this->verifyCsrf();
+
+        $routerId   = (int) ($_POST['router_id']   ?? 0);
+        $pppoeNames = array_map('strval', (array) ($_POST['pppoe_names'] ?? []));
+
+        if ($routerId <= 0) {
+            Response::error('router_id is required.', 422);
+        }
+
+        if ($pppoeNames === []) {
+            Response::error('No PPPoE sessions selected.', 422);
+        }
+
+        $discovered = $this->service->discoverPppoe($routerId);
+
+        if ($discovered === false) {
+            Response::error('Discovery failed. Cannot import sessions.', 503);
+        }
+
+        $toImport = array_filter(
+            $discovered,
+            static fn(array $u): bool => in_array((string) $u['name'], $pppoeNames, true),
+        );
+
+        foreach ($toImport as &$user) {
+            $user['status']    = 'connected';
+            $user['monitored'] = 1;
+        }
+        unset($user);
+
+        $count = $this->model->bulkUpsert($routerId, array_values($toImport));
+
+        Response::success(['imported' => $count], $count . ' PPPoE sessions imported.');
     }
 
     // -------------------------------------------------------------------------

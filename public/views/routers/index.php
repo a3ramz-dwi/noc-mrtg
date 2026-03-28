@@ -15,16 +15,16 @@ $pageTitle = 'Routers';
     </a>
   </div>
 
-  <?php if (!empty($_SESSION['_flash']['success'])): ?>
+  <?php if (!empty($success)): ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
-      <?= htmlspecialchars($_SESSION['_flash']['success']) ?>
+      <?= htmlspecialchars($success) ?>
       <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
   <?php endif; ?>
 
-  <?php if (!empty($_SESSION['_flash']['error'])): ?>
+  <?php if (!empty($error)): ?>
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-      <?= htmlspecialchars($_SESSION['_flash']['error']) ?>
+      <?= htmlspecialchars($error) ?>
       <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
   <?php endif; ?>
@@ -79,7 +79,7 @@ $pageTitle = 'Routers';
                   </td>
                   <td><?= (int) ($router['interface_count'] ?? 0) ?></td>
                   <td class="text-muted small">
-                    <?= $router['last_polled'] ? htmlspecialchars($router['last_polled']) : '—' ?>
+                    <?= $router['last_seen'] ? htmlspecialchars($router['last_seen']) : '—' ?>
                   </td>
                   <td class="text-end">
                     <div class="btn-group btn-group-sm">

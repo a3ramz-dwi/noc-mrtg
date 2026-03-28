@@ -58,16 +58,16 @@ $pageTitle = 'Discover PPPoE: ' . htmlspecialchars($router['name'] ?? '');
                     <td>
                       <?php if (empty($u['imported'])): ?>
                         <input type="checkbox"
-                               name="users[]"
-                               value="<?= htmlspecialchars($u['username']) ?>"
+                               name="pppoe_names[]"
+                               value="<?= htmlspecialchars($u['name']) ?>"
                                class="form-check-input pppoe-check">
                       <?php else: ?>
                         <i class="fas fa-check text-success"></i>
                       <?php endif; ?>
                     </td>
-                    <td><?= htmlspecialchars($u['username'] ?? '') ?></td>
-                    <td><code><?= htmlspecialchars($u['ip_address'] ?? '—') ?></code></td>
-                    <td><code><?= htmlspecialchars($u['mac_address'] ?? '—') ?></code></td>
+                    <td><?= htmlspecialchars($u['name'] ?? '') ?></td>
+                    <td><code><?= htmlspecialchars($u['remote_address'] ?? '—') ?></code></td>
+                    <td><code><?= htmlspecialchars($u['caller_id'] ?? '—') ?></code></td>
                     <td class="text-muted small"><?= htmlspecialchars($u['service'] ?? '') ?></td>
                     <td>
                       <?php $status = $u['status'] ?? 'disconnected'; ?>

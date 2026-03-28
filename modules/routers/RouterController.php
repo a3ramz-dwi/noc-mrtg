@@ -7,6 +7,7 @@ namespace NOC\Modules\Routers;
 use NOC\Core\Response;
 use NOC\Core\Session;
 use NOC\Core\Auth;
+use NOC\Modules\Interfaces\InterfaceModel;
 
 /**
  * RouterController — HTTP request handler for the Routers module.
@@ -53,7 +54,11 @@ final class RouterController
             Response::success($routers, 'Routers retrieved.');
         }
 
-        Response::view('routers/index', ['routers' => $routers]);
+        Response::view('routers/index', [
+            'routers' => $routers,
+            'success' => $this->session->getFlash('success'),
+            'error'   => $this->session->getFlash('error'),
+        ]);
     }
 
     /**
@@ -70,6 +75,10 @@ final class RouterController
             $this->session->setFlash('error', 'Router not found.');
             Response::redirect('/routers');
         }
+
+        $interfaces = (new InterfaceModel())->findByRouter($id);
+
+        $router['interfaces'] = $interfaces;
 
         if ($this->wantsJson()) {
             Response::success($router);
@@ -88,7 +97,9 @@ final class RouterController
     public function create(): never
     {
         Response::view('routers/create', [
-            'csrf' => $this->session->generateCsrfToken(),
+            'csrf'   => $this->session->generateCsrfToken(),
+            'errors' => $this->session->getFlash('errors', []),
+            'old'    => $this->session->getFlash('old', []),
         ]);
     }
 
@@ -138,6 +149,7 @@ final class RouterController
         Response::view('routers/edit', [
             'router' => $router,
             'csrf'   => $this->session->generateCsrfToken(),
+            'errors' => $this->session->getFlash('errors', []),
         ]);
     }
 

@@ -7,6 +7,7 @@ namespace NOC\Modules\Queues;
 use NOC\Core\Response;
 use NOC\Core\Session;
 use NOC\Core\Auth;
+use NOC\Modules\Routers\RouterModel;
 
 /**
  * QueueController — HTTP request handler for the Queues module.
@@ -52,9 +53,12 @@ final class QueueController
             Response::success($queues);
         }
 
+        $routers = (new RouterModel())->findAll();
+
         Response::view('queues/index', [
             'queues'    => $queues,
             'router_id' => $routerId,
+            'routers'   => $routers,
         ]);
     }
 
@@ -96,6 +100,38 @@ final class QueueController
     // -------------------------------------------------------------------------
     // Discovery & import
     // -------------------------------------------------------------------------
+
+    /**
+     * GET /routers/{id}/queues/discover — HTML page: discover queues via SNMP.
+     */
+    public function discoverPage(int $routerId): never
+    {
+        $router = (new RouterModel())->findById($routerId);
+
+        if ($router === null) {
+            $this->session->setFlash('error', 'Router not found.');
+            Response::redirect('/queues');
+        }
+
+        $discovered = $this->service->discoverQueues($routerId);
+
+        $existing     = $this->model->findByRouter($routerId);
+        $existingIdx  = array_flip(array_column($existing, 'queue_index'));
+
+        if (is_array($discovered)) {
+            foreach ($discovered as &$q) {
+                $q['imported'] = isset($existingIdx[(int) $q['queue_index']]);
+            }
+            unset($q);
+        }
+
+        Response::view('queues/discover', [
+            'router'     => $router,
+            'discovered' => is_array($discovered) ? $discovered : [],
+            'error'      => $discovered === false ? 'SNMP discovery failed. Check router SNMP settings.' : null,
+            'csrf'       => $this->session->generateCsrfToken(),
+        ]);
+    }
 
     /**
      * GET /queues/discover/{routerId} — AJAX: discover queues via SNMP.

@@ -69,17 +69,29 @@ $pageTitle = 'Simple Queues';
                   </td>
                   <td>
                     <a href="/queues/<?= (int) $q['id'] ?>">
-                      <?= htmlspecialchars($q['queue_name'] ?? '') ?>
+                      <?= htmlspecialchars($q['name'] ?? '') ?>
                     </a>
                   </td>
                   <td class="text-muted small"><?= htmlspecialchars($q['target'] ?? '—') ?></td>
-                  <td class="text-muted small"><?= htmlspecialchars($q['max_limit'] ?? '—') ?></td>
+                  <td class="text-muted small">
+                    <?php
+                    $ul = $q['max_limit_upload']   ?? null;
+                    $dl = $q['max_limit_download'] ?? null;
+                    if ($ul !== null && $dl !== null) {
+                        echo htmlspecialchars($ul . '/' . $dl);
+                    } elseif ($ul !== null || $dl !== null) {
+                        echo htmlspecialchars(($ul ?? '—') . '/' . ($dl ?? '—'));
+                    } else {
+                        echo '—';
+                    }
+                    ?>
+                  </td>
                   <td>
                     <div class="form-check form-switch">
                       <input class="form-check-input toggle-monitor"
                              type="checkbox"
                              data-id="<?= (int) $q['id'] ?>"
-                             <?= !empty($q['monitor']) ? 'checked' : '' ?>>
+                             <?= !empty($q['monitored']) ? 'checked' : '' ?>>
                     </div>
                   </td>
                   <td class="text-end">

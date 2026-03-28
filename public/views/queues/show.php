@@ -4,7 +4,7 @@
  *
  * @var array $queue  Queue record with traffic stats
  */
-$pageTitle = 'Queue: ' . htmlspecialchars($queue['queue_name'] ?? '');
+$pageTitle = 'Queue: ' . htmlspecialchars($queue['name'] ?? '');
 ?>
 <div id="queue-show-page">
 
@@ -14,7 +14,7 @@ $pageTitle = 'Queue: ' . htmlspecialchars($queue['queue_name'] ?? '');
     </a>
     <h2 class="page-title mt-1">
       <i class="fas fa-layer-group me-2 text-warning"></i>
-      <?= htmlspecialchars($queue['queue_name'] ?? 'Queue') ?>
+      <?= htmlspecialchars($queue['name'] ?? 'Queue') ?>
     </h2>
   </div>
 
@@ -34,19 +34,44 @@ $pageTitle = 'Queue: ' . htmlspecialchars($queue['queue_name'] ?? '');
             </dd>
 
             <dt class="col-sm-5 text-muted">Queue Name</dt>
-            <dd class="col-sm-7"><?= htmlspecialchars($queue['queue_name'] ?? '') ?></dd>
+            <dd class="col-sm-7"><?= htmlspecialchars($queue['name'] ?? '') ?></dd>
 
             <dt class="col-sm-5 text-muted">Target</dt>
             <dd class="col-sm-7"><code><?= htmlspecialchars($queue['target'] ?? '—') ?></code></dd>
 
             <dt class="col-sm-5 text-muted">Max Limit</dt>
-            <dd class="col-sm-7"><?= htmlspecialchars($queue['max_limit'] ?? '—') ?></dd>
+            <dd class="col-sm-7">
+              <?php
+              $ul = $queue['max_limit_upload']   ?? null;
+              $dl = $queue['max_limit_download'] ?? null;
+              if ($ul !== null && $dl !== null) {
+                  echo htmlspecialchars($ul . ' / ' . $dl);
+              } elseif ($ul !== null) {
+                  echo htmlspecialchars($ul . ' / —');
+              } elseif ($dl !== null) {
+                  echo htmlspecialchars('— / ' . $dl);
+              } else {
+                  echo '—';
+              }
+              ?>
+            </dd>
 
             <dt class="col-sm-5 text-muted">Burst Limit</dt>
-            <dd class="col-sm-7"><?= htmlspecialchars($queue['burst_limit'] ?? '—') ?></dd>
-
-            <dt class="col-sm-5 text-muted">Priority</dt>
-            <dd class="col-sm-7"><?= htmlspecialchars($queue['priority'] ?? '—') ?></dd>
+            <dd class="col-sm-7">
+              <?php
+              $bul = $queue['burst_limit_upload']   ?? null;
+              $bdl = $queue['burst_limit_download'] ?? null;
+              if ($bul !== null && $bdl !== null) {
+                  echo htmlspecialchars($bul . ' / ' . $bdl);
+              } elseif ($bul !== null) {
+                  echo htmlspecialchars($bul . ' / —');
+              } elseif ($bdl !== null) {
+                  echo htmlspecialchars('— / ' . $bdl);
+              } else {
+                  echo '—';
+              }
+              ?>
+            </dd>
 
             <dt class="col-sm-5 text-muted">Monitor</dt>
             <dd class="col-sm-7">
@@ -54,7 +79,7 @@ $pageTitle = 'Queue: ' . htmlspecialchars($queue['queue_name'] ?? '');
                 <input class="form-check-input toggle-monitor"
                        type="checkbox"
                        data-id="<?= (int) $queue['id'] ?>"
-                       <?= !empty($queue['monitor']) ? 'checked' : '' ?>>
+                       <?= !empty($queue['monitored']) ? 'checked' : '' ?>>
               </div>
             </dd>
           </dl>

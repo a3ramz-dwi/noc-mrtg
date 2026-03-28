@@ -4,7 +4,7 @@
  *
  * @var array $interface  Interface record with traffic stats
  */
-$pageTitle = 'Interface: ' . htmlspecialchars($interface['if_name'] ?? '');
+$pageTitle = 'Interface: ' . htmlspecialchars($interface['name'] ?? '');
 ?>
 <div id="interface-show-page">
 
@@ -14,7 +14,7 @@ $pageTitle = 'Interface: ' . htmlspecialchars($interface['if_name'] ?? '');
     </a>
     <h2 class="page-title mt-1">
       <i class="fas fa-ethernet me-2 text-success"></i>
-      <?= htmlspecialchars($interface['if_name'] ?? 'Interface') ?>
+      <?= htmlspecialchars($interface['name'] ?? 'Interface') ?>
     </h2>
   </div>
 
@@ -37,19 +37,19 @@ $pageTitle = 'Interface: ' . htmlspecialchars($interface['if_name'] ?? '');
             <dd class="col-sm-7"><?= (int) $interface['if_index'] ?></dd>
 
             <dt class="col-sm-5 text-muted">Name</dt>
-            <dd class="col-sm-7"><?= htmlspecialchars($interface['if_name'] ?? '') ?></dd>
+            <dd class="col-sm-7"><?= htmlspecialchars($interface['name'] ?? '') ?></dd>
 
             <dt class="col-sm-5 text-muted">Alias</dt>
-            <dd class="col-sm-7 text-muted"><?= htmlspecialchars($interface['if_alias'] ?? '—') ?></dd>
+            <dd class="col-sm-7 text-muted"><?= htmlspecialchars($interface['alias'] ?? '—') ?></dd>
 
             <dt class="col-sm-5 text-muted">Description</dt>
-            <dd class="col-sm-7 text-muted small"><?= htmlspecialchars($interface['if_descr'] ?? '—') ?></dd>
+            <dd class="col-sm-7 text-muted small"><?= htmlspecialchars($interface['description'] ?? '—') ?></dd>
 
             <dt class="col-sm-5 text-muted">Speed</dt>
-            <dd class="col-sm-7"><?= htmlspecialchars($interface['if_speed'] ?? '—') ?></dd>
+            <dd class="col-sm-7"><?= htmlspecialchars($interface['speed'] ?? '—') ?></dd>
 
             <dt class="col-sm-5 text-muted">MAC</dt>
-            <dd class="col-sm-7"><code><?= htmlspecialchars($interface['if_phys_address'] ?? '—') ?></code></dd>
+            <dd class="col-sm-7"><code><?= htmlspecialchars($interface['mac_address'] ?? '—') ?></code></dd>
 
             <dt class="col-sm-5 text-muted">Admin Status</dt>
             <dd class="col-sm-7">
@@ -73,7 +73,7 @@ $pageTitle = 'Interface: ' . htmlspecialchars($interface['if_name'] ?? '');
                 <input class="form-check-input toggle-monitor"
                        type="checkbox"
                        data-id="<?= (int) $interface['id'] ?>"
-                       <?= !empty($interface['monitor']) ? 'checked' : '' ?>>
+                       <?= !empty($interface['monitored']) ? 'checked' : '' ?>>
               </div>
             </dd>
           </dl>

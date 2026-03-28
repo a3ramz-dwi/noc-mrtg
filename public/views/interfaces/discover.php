@@ -62,7 +62,7 @@ $pageTitle = 'Discover Interfaces: ' . htmlspecialchars($router['name'] ?? '');
                     <td>
                       <?php if (empty($iface['imported'])): ?>
                         <input type="checkbox"
-                               name="interfaces[]"
+                               name="if_indexes[]"
                                value="<?= (int) $iface['if_index'] ?>"
                                class="form-check-input iface-check">
                       <?php else: ?>
@@ -70,18 +70,18 @@ $pageTitle = 'Discover Interfaces: ' . htmlspecialchars($router['name'] ?? '');
                       <?php endif; ?>
                     </td>
                     <td><?= (int) $iface['if_index'] ?></td>
-                    <td><?= htmlspecialchars($iface['if_name'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($iface['name'] ?? '') ?></td>
                     <td class="text-muted small">
-                      <?= htmlspecialchars($iface['if_alias'] ?? $iface['if_descr'] ?? '') ?>
+                      <?= htmlspecialchars($iface['alias'] ?? $iface['description'] ?? '') ?>
                     </td>
-                    <td class="text-muted small"><?= htmlspecialchars($iface['if_speed'] ?? '') ?></td>
+                    <td class="text-muted small"><?= htmlspecialchars((string) ($iface['speed'] ?? '')) ?></td>
                     <td>
-                      <?php $as = (int) ($iface['admin_status'] ?? 0); ?>
-                      <span class="badge bg-<?= $as === 1 ? 'primary' : 'secondary' ?>"><?= $as === 1 ? 'up' : 'down' ?></span>
+                      <?php $as = $iface['admin_status'] ?? 'down'; ?>
+                      <span class="badge bg-<?= $as === 'up' ? 'primary' : 'secondary' ?>"><?= $as ?></span>
                     </td>
                     <td>
-                      <?php $os = (int) ($iface['oper_status'] ?? 0); ?>
-                      <span class="badge bg-<?= $os === 1 ? 'success' : 'secondary' ?>"><?= $os === 1 ? 'up' : 'down' ?></span>
+                      <?php $os = $iface['oper_status'] ?? 'down'; ?>
+                      <span class="badge bg-<?= $os === 'up' ? 'success' : 'secondary' ?>"><?= $os ?></span>
                     </td>
                     <td><?= !empty($iface['imported']) ? '<span class="badge bg-info">Yes</span>' : '—' ?></td>
                   </tr>

@@ -12,6 +12,5 @@ RewriteRule ^ - [L]
     Deny from all
 </FilesMatch>
 
-<DirectoryMatch "^/(core|modules|config|database|docs|cron|snmp|mrtg|api)/">
-    Deny from all
-</DirectoryMatch>
+# Deny direct access to sensitive directories (DirectoryMatch not allowed in .htaccess)
+RewriteRule ^(core|modules|config|database|docs|cron|snmp|mrtg|api)/ - [F,L]

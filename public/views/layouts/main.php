@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="csrf-token" content="<?= htmlspecialchars($_SESSION['_csrf_token'] ?? '', ENT_QUOTES) ?>">
+  <meta name="csrf-token" content="<?= htmlspecialchars($_SESSION['_csrf_token'] ??= bin2hex(random_bytes(32)), ENT_QUOTES) ?>">
   <title><?= htmlspecialchars($pageTitle ?? 'NOC Manager') ?> | NOC Manager v<?= APP_VERSION ?></title>
   <!-- Bootstrap 5 Dark -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">

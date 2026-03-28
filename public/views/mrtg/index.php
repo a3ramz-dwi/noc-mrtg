@@ -12,10 +12,10 @@ $pageTitle = 'MRTG Manager';
     <h2 class="page-title">
       <i class="fas fa-chart-area me-2 text-primary"></i>MRTG Manager
     </h2>
-    <form method="POST" action="/mrtg/generate" id="generate-form">
+    <form method="POST" action="/mrtg/generate-all" id="generate-form">
       <input type="hidden" name="_csrf" value="<?= htmlspecialchars($csrf ?? '') ?>">
       <button type="submit" class="btn btn-primary" id="generate-btn">
-        <i class="fas fa-cogs me-1"></i> Generate MRTG Config
+        <i class="fas fa-cogs me-1"></i> Generate All MRTG Configs
       </button>
     </form>
   </div>
@@ -97,8 +97,8 @@ $pageTitle = 'MRTG Manager';
               <?php foreach ($configs as $c): ?>
                 <tr>
                   <td><?= (int) $c['id'] ?></td>
-                  <td><code><?= htmlspecialchars($c['target_key'] ?? '') ?></code></td>
-                  <td class="text-muted small"><?= htmlspecialchars($c['description'] ?? '') ?></td>
+                  <td><code><?= htmlspecialchars(basename((string) ($c['filename'] ?? '')) ?: '—') ?></code></td>
+                  <td class="text-muted small"><?= htmlspecialchars(($c['router_name'] ?? '') . ' — ' . ($c['target_type'] ?? '')) ?></td>
                   <td>
                     <span class="badge bg-secondary"><?= htmlspecialchars($c['target_type'] ?? '') ?></span>
                   </td>
@@ -109,7 +109,7 @@ $pageTitle = 'MRTG Manager';
                     </span>
                   </td>
                   <td class="text-muted small">
-                    <?= $c['last_generated'] ? htmlspecialchars($c['last_generated']) : '—' ?>
+                    <?= $c['generated_at'] ? htmlspecialchars($c['generated_at']) : '—' ?>
                   </td>
                   <td class="text-end">
                     <a href="/mrtg/<?= (int) $c['id'] ?>" class="btn btn-sm btn-outline-secondary" title="View Config">
