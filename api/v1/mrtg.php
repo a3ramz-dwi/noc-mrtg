@@ -15,7 +15,7 @@ $seg2     = $segments[2] ?? null;
 
 $db      = \NOC\Core\Database::getInstance();
 $model   = new \NOC\Modules\Mrtg\MrtgModel($db);
-$service = new \NOC\Modules\Mrtg\MrtgService($db, \NOC\Core\Logger::getInstance());
+$service = new \NOC\Modules\Mrtg\MrtgService($model, null, $db, \NOC\Core\Logger::getInstance());
 
 try {
     // POST /mrtg/generate-all
