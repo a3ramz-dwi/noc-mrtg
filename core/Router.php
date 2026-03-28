@@ -225,6 +225,11 @@ final class Router
     /**
      * Invoke the route handler with captured URL parameters.
      *
+     * Supports controllers with:
+     *  - No parameters:  index(), showLogin(), etc.
+     *  - Named int/string params:  show(int $id), edit(int $id), etc.
+     *  - Array params:  handler(array $params).
+     *
      * @param  mixed                  $handler  Closure or [ClassName, 'method'].
      * @param  array<string, string>  $params   URL parameters.
      */
@@ -250,7 +255,9 @@ final class Router
                 );
             }
 
-            $controller->$method($params);
+            // Introspect the method to build a correctly-typed argument list.
+            $args = $this->buildArgs($controller, $method, $params);
+            $controller->$method(...$args);
             return;
         }
 
@@ -262,6 +269,68 @@ final class Router
         throw new \InvalidArgumentException(
             'Route handler must be a Closure, callable, or [ClassName, \'method\'] array.',
         );
+    }
+
+    /**
+     * Build a correctly-typed argument list for a controller method.
+     *
+     * - Methods with no declared parameters are called with no arguments.
+     * - Methods with a single `array $params` parameter receive the raw map.
+     * - Methods with typed scalar parameters (int, string, …) receive the
+     *   corresponding URL capture cast to the declared type.
+     *
+     * @param  object                $controller
+     * @param  string                $method
+     * @param  array<string, string> $params      Named URL captures.
+     * @return list<mixed>
+     */
+    private function buildArgs(object $controller, string $method, array $params): array
+    {
+        try {
+            $rf = new \ReflectionMethod($controller, $method);
+        } catch (\ReflectionException) {
+            return [$params];
+        }
+
+        $refParams = $rf->getParameters();
+
+        if (empty($refParams)) {
+            return [];
+        }
+
+        // Single array parameter — pass the whole map.
+        if (
+            count($refParams) === 1
+            && ($refParams[0]->getType() instanceof \ReflectionNamedType)
+            && $refParams[0]->getType()->getName() === 'array'
+        ) {
+            return [$params];
+        }
+
+        $args = [];
+
+        foreach ($refParams as $rp) {
+            $name  = $rp->getName();
+            $type  = $rp->getType() instanceof \ReflectionNamedType
+                ? $rp->getType()->getName()
+                : 'string';
+
+            if (array_key_exists($name, $params)) {
+                $args[] = match ($type) {
+                    'int'   => (int)   $params[$name],
+                    'float' => (float) $params[$name],
+                    'bool'  => (bool)  $params[$name],
+                    default => (string) $params[$name],
+                };
+            } elseif ($rp->isOptional()) {
+                $args[] = $rp->getDefaultValue();
+            } else {
+                // Fallback: pass the raw params array for variadic or unknown signatures.
+                return [$params];
+            }
+        }
+
+        return $args;
     }
 
     /**

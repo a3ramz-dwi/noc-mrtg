@@ -40,6 +40,22 @@ final class Auth
     }
 
     // -----------------------------------------------------------------------
+    // Static session bootstrap
+    // -----------------------------------------------------------------------
+
+    /**
+     * Start the PHP session if it has not been started yet.
+     *
+     * Call this once at the front-controller before any other Auth usage.
+     */
+    public static function startSession(): void
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+    }
+
+    // -----------------------------------------------------------------------
     // Login / Logout
     // -----------------------------------------------------------------------
 

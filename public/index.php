@@ -6,17 +6,18 @@ require $appDir . '/config/app.php';
 
 use NOC\Core\Router;
 use NOC\Core\Auth;
-use NOC\Controllers\AuthController;
-use NOC\Controllers\DashboardController;
-use NOC\Controllers\RouterController;
-use NOC\Controllers\InterfaceController;
-use NOC\Controllers\QueueController;
-use NOC\Controllers\PppoeController;
-use NOC\Controllers\MonitoringController;
-use NOC\Controllers\MrtgController;
-use NOC\Controllers\SettingsController;
+use NOC\Core\Session;
+use NOC\Modules\Auth\AuthController;
+use NOC\Modules\Dashboard\DashboardController;
+use NOC\Modules\Routers\RouterController;
+use NOC\Modules\Interfaces\InterfaceController;
+use NOC\Modules\Queues\QueueController;
+use NOC\Modules\Pppoe\PppoeController;
+use NOC\Modules\Monitoring\MonitoringController;
+use NOC\Modules\Mrtg\MrtgController;
+use NOC\Modules\Settings\SettingsController;
 
-// Start session and check auth
+// Start session
 Auth::startSession();
 
 $router = new Router();
@@ -81,4 +82,4 @@ $router->get('/settings', [SettingsController::class, 'index']);
 $router->post('/settings', [SettingsController::class, 'update']);
 
 // Dispatch
-$router->dispatch();
+$router->dispatch($_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI']);

@@ -1,0 +1,25 @@
+# Environment
+.env
+
+# Composer
+/vendor/
+composer.lock
+
+# PHP logs and caches
+*.log
+/logs/
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Generated MRTG files
+/var/www/mrtg/
+
+# Temp files
+/tmp/
+*.lock
