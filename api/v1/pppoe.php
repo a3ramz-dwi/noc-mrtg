@@ -17,7 +17,7 @@ $seg2 = $segments[2] ?? null;
 
 $db      = \NOC\Core\Database::getInstance();
 $model   = new \NOC\Modules\Pppoe\PppoeModel($db);
-$service = new \NOC\Modules\Pppoe\PppoeService($db, \NOC\Core\Logger::getInstance());
+$service = new \NOC\Modules\Pppoe\PppoeService($model, \NOC\Core\Logger::getInstance());
 
 try {
     if ($method === 'POST' && $seg1 === 'discover' && is_numeric($seg2)) {
