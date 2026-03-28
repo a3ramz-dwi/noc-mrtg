@@ -6,7 +6,23 @@ $appDir = '/var/www/noc';
 require_once $appDir . '/config/app.php';
 
 // CORS headers
-header('Access-Control-Allow-Origin: *');
+$appEnv = getenv('APP_ENV') ?: 'production';
+$allowedOriginsEnv = getenv('CORS_ALLOWED_ORIGINS') ?: '';
+$allowedOrigins = array_filter(array_map('trim', explode(',', $allowedOriginsEnv)));
+
+if (!empty($_SERVER['HTTP_ORIGIN'])) {
+    $origin = $_SERVER['HTTP_ORIGIN'];
+    if (!empty($allowedOrigins) && in_array($origin, $allowedOrigins, true)) {
+        header('Access-Control-Allow-Origin: ' . $origin);
+        header('Vary: Origin');
+    } elseif (empty($allowedOrigins) && $appEnv !== 'production') {
+        // Fallback for non-production environments when no allowlist is configured
+        header('Access-Control-Allow-Origin: *');
+    }
+} elseif ($appEnv !== 'production' && empty($allowedOrigins)) {
+    // Non-production fallback when no Origin header is present and no allowlist is configured
+    header('Access-Control-Allow-Origin: *');
+}
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization, X-API-Token');
 header('Content-Type: application/json; charset=UTF-8');
