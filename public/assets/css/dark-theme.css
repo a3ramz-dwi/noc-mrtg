@@ -1,0 +1,196 @@
+/* Dark Theme Overrides - Bootstrap 5 Dark Mode Enhancements */
+[data-bs-theme="dark"],
+.dark-mode {
+  --bs-body-bg: #0d1117;
+  --bs-body-color: #e6edf3;
+  --bs-border-color: #30363d;
+  --bs-secondary-bg: #161b22;
+  --bs-tertiary-bg: #21262d;
+  --bs-link-color: #58a6ff;
+  --bs-link-hover-color: #79b8ff;
+  --bs-code-color: #ff7b72;
+  --bs-highlight-bg: #2d333b;
+}
+
+/* Dark form controls */
+.dark-mode .form-control,
+.dark-mode .form-select,
+.dark-mode .form-check-input,
+[data-bs-theme="dark"] .form-control,
+[data-bs-theme="dark"] .form-select {
+  background-color: #21262d;
+  border-color: #30363d;
+  color: #e6edf3;
+}
+
+.dark-mode .form-control:focus,
+.dark-mode .form-select:focus,
+[data-bs-theme="dark"] .form-control:focus {
+  background-color: #161b22;
+  border-color: #58a6ff;
+  color: #e6edf3;
+  box-shadow: 0 0 0 0.25rem rgba(88,166,255,0.25);
+}
+
+.dark-mode .form-control::placeholder { color: #6e7681; }
+.dark-mode .input-group-text {
+  background-color: #21262d;
+  border-color: #30363d;
+  color: #8b949e;
+}
+
+/* Dark modals */
+.dark-mode .modal-content,
+[data-bs-theme="dark"] .modal-content {
+  background-color: #161b22;
+  border-color: #30363d;
+  color: #e6edf3;
+}
+
+.dark-mode .modal-header,
+[data-bs-theme="dark"] .modal-header {
+  border-bottom-color: #30363d;
+  background-color: #21262d;
+}
+
+.dark-mode .modal-footer,
+[data-bs-theme="dark"] .modal-footer {
+  border-top-color: #30363d;
+  background-color: #21262d;
+}
+
+.dark-mode .modal-title { color: #e6edf3; }
+.dark-mode .btn-close { filter: invert(1) grayscale(100%); }
+
+/* Dark dropdowns */
+.dark-mode .dropdown-menu,
+[data-bs-theme="dark"] .dropdown-menu {
+  background-color: #161b22;
+  border-color: #30363d;
+}
+
+.dark-mode .dropdown-item,
+[data-bs-theme="dark"] .dropdown-item {
+  color: #e6edf3;
+}
+
+.dark-mode .dropdown-item:hover,
+[data-bs-theme="dark"] .dropdown-item:hover {
+  background-color: #21262d;
+  color: #e6edf3;
+}
+
+.dark-mode .dropdown-divider { border-color: #30363d; }
+
+/* Dark tables */
+.dark-mode .table,
+[data-bs-theme="dark"] .table {
+  --bs-table-bg: #1c2128;
+  --bs-table-striped-bg: #21262d;
+  --bs-table-hover-bg: rgba(88,166,255,0.05);
+  --bs-table-border-color: #30363d;
+  color: #e6edf3;
+}
+
+.dark-mode .table thead th,
+[data-bs-theme="dark"] .table thead th {
+  background-color: #21262d;
+  border-color: #30363d;
+  color: #8b949e;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.dark-mode .table-bordered {
+  border-color: #30363d;
+}
+
+/* Dark pagination */
+.dark-mode .pagination .page-link,
+[data-bs-theme="dark"] .pagination .page-link {
+  background-color: #21262d;
+  border-color: #30363d;
+  color: #58a6ff;
+}
+
+.dark-mode .pagination .page-link:hover {
+  background-color: #30363d;
+  border-color: #30363d;
+  color: #79b8ff;
+}
+
+.dark-mode .pagination .page-item.active .page-link {
+  background-color: #58a6ff;
+  border-color: #58a6ff;
+  color: #0d1117;
+}
+
+.dark-mode .pagination .page-item.disabled .page-link {
+  background-color: #161b22;
+  border-color: #30363d;
+  color: #6e7681;
+}
+
+/* Dark cards */
+.dark-mode .card {
+  background-color: #1c2128;
+  border-color: #30363d;
+}
+
+.dark-mode .card-header {
+  background-color: #21262d;
+  border-bottom-color: #30363d;
+  color: #e6edf3;
+}
+
+/* Dark nav tabs */
+.dark-mode .nav-tabs {
+  border-bottom-color: #30363d;
+}
+
+.dark-mode .nav-tabs .nav-link {
+  color: #8b949e;
+  border-color: transparent;
+}
+
+.dark-mode .nav-tabs .nav-link:hover {
+  color: #e6edf3;
+  border-color: #30363d;
+}
+
+.dark-mode .nav-tabs .nav-link.active {
+  background-color: #1c2128;
+  border-color: #30363d #30363d #1c2128;
+  color: #58a6ff;
+}
+
+/* Dark tooltips */
+.dark-mode .tooltip .tooltip-inner {
+  background-color: #30363d;
+  color: #e6edf3;
+}
+
+/* Dark list group */
+.dark-mode .list-group-item {
+  background-color: #1c2128;
+  border-color: #30363d;
+  color: #e6edf3;
+}
+
+.dark-mode .list-group-item:hover {
+  background-color: #21262d;
+}
+
+/* Dark progress bars */
+.dark-mode .progress {
+  background-color: #21262d;
+}
+
+/* Dark hr */
+.dark-mode hr { border-color: #30363d; }
+
+/* Dark breadcrumb */
+.dark-mode .breadcrumb-item + .breadcrumb-item::before { color: #6e7681; }
+.dark-mode .breadcrumb-item.active { color: #8b949e; }
+.dark-mode .breadcrumb-item a { color: #58a6ff; }
