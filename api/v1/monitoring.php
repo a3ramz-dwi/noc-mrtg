@@ -18,7 +18,7 @@ $seg3   = $segments[3] ?? null;
 
 $db      = \NOC\Core\Database::getInstance();
 $model   = new \NOC\Modules\Monitoring\MonitoringModel($db);
-$service = new \NOC\Modules\Monitoring\MonitoringService($db, \NOC\Core\Logger::getInstance());
+$service = new \NOC\Modules\Monitoring\MonitoringService(null, $db, \NOC\Core\Logger::getInstance());
 
 try {
     // GET /monitoring/traffic/{type}/{id}?period=daily
