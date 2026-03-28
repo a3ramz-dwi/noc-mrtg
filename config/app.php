@@ -108,6 +108,41 @@ if (APP_ENV === 'production') {
 }
 
 // ---------------------------------------------------------------------------
+// View directory
+// ---------------------------------------------------------------------------
+defined('VIEW_DIR') || define('VIEW_DIR', APP_DIR . '/public/views');
+
+// ---------------------------------------------------------------------------
+// PSR-4 autoloader
+// ---------------------------------------------------------------------------
+spl_autoload_register(static function (string $class): void {
+    $base = APP_DIR;
+    $map = [
+        'NOC\\Core\\'                => $base . '/core/',
+        'NOC\\SNMP\\'                => $base . '/snmp/',
+        'NOC\\MRTG\\'                => $base . '/mrtg/',
+        'NOC\\Modules\\Routers\\'    => $base . '/modules/routers/',
+        'NOC\\Modules\\Interfaces\\' => $base . '/modules/interfaces/',
+        'NOC\\Modules\\Queues\\'     => $base . '/modules/queues/',
+        'NOC\\Modules\\Pppoe\\'      => $base . '/modules/pppoe/',
+        'NOC\\Modules\\Monitoring\\' => $base . '/modules/monitoring/',
+        'NOC\\Modules\\Mrtg\\'       => $base . '/modules/mrtg/',
+        'NOC\\Modules\\Dashboard\\'  => $base . '/modules/dashboard/',
+        'NOC\\Modules\\Auth\\'       => $base . '/modules/auth/',
+        'NOC\\Modules\\Settings\\'   => $base . '/modules/settings/',
+    ];
+    foreach ($map as $prefix => $dir) {
+        if (str_starts_with($class, $prefix)) {
+            $file = $dir . str_replace('\\', '/', substr($class, strlen($prefix))) . '.php';
+            if (is_file($file)) {
+                require $file;
+            }
+            return;
+        }
+    }
+});
+
+// ---------------------------------------------------------------------------
 // Timezone
 // ---------------------------------------------------------------------------
 date_default_timezone_set('Asia/Jakarta');
