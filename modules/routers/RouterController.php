@@ -7,7 +7,6 @@ namespace NOC\Modules\Routers;
 use NOC\Core\Response;
 use NOC\Core\Session;
 use NOC\Core\Auth;
-use NOC\Modules\Interfaces\InterfaceModel;
 
 /**
  * RouterController — HTTP request handler for the Routers module.
@@ -75,10 +74,6 @@ final class RouterController
             $this->session->setFlash('error', 'Router not found.');
             Response::redirect('/routers');
         }
-
-        $interfaces = (new InterfaceModel())->findByRouter($id);
-
-        $router['interfaces'] = $interfaces;
 
         if ($this->wantsJson()) {
             Response::success($router);

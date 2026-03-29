@@ -48,13 +48,19 @@ final class RouterModel
     public function findAllWithStats(): array
     {
         return $this->db->fetchAll(
-            'SELECT r.*,
+            "SELECT r.`id`, r.`name`, r.`ip_address`, r.`snmp_community`, r.`snmp_version`,
+                    r.`snmp_port`, r.`username`, r.`password`, r.`router_os_version`,
+                    r.`identity`, r.`model`, r.`serial`, r.`uptime`, r.`status`,
+                    r.`created_at`, r.`updated_at`,
                     COUNT(DISTINCT i.id) AS interface_count,
-                    r.updated_at         AS last_seen
+                    r.`updated_at`       AS last_seen
                FROM `routers` r
                LEFT JOIN `interfaces` i ON i.`router_id` = r.`id`
-              GROUP BY r.`id`
-              ORDER BY r.`name` ASC',
+              GROUP BY r.`id`, r.`name`, r.`ip_address`, r.`snmp_community`, r.`snmp_version`,
+                       r.`snmp_port`, r.`username`, r.`password`, r.`router_os_version`,
+                       r.`identity`, r.`model`, r.`serial`, r.`uptime`, r.`status`,
+                       r.`created_at`, r.`updated_at`
+              ORDER BY r.`name` ASC",
         );
     }
 
@@ -81,19 +87,25 @@ final class RouterModel
     public function findWithStats(int $id): ?array
     {
         return $this->db->fetch(
-            'SELECT r.*,
+            "SELECT r.`id`, r.`name`, r.`ip_address`, r.`snmp_community`, r.`snmp_version`,
+                    r.`snmp_port`, r.`username`, r.`password`, r.`router_os_version`,
+                    r.`identity`, r.`model`, r.`serial`, r.`uptime`, r.`status`,
+                    r.`created_at`, r.`updated_at`,
                     COUNT(DISTINCT i.id)   AS interface_count,
                     COUNT(DISTINCT sq.id)  AS queue_count,
                     COUNT(DISTINCT pu.id)  AS pppoe_active_count,
-                    r.updated_at           AS last_seen
+                    r.`updated_at`         AS last_seen
                FROM `routers` r
                LEFT JOIN `interfaces`    i  ON i.`router_id`  = r.`id`
                LEFT JOIN `simple_queues` sq ON sq.`router_id` = r.`id`
                LEFT JOIN `pppoe_users`   pu ON pu.`router_id` = r.`id`
-                                           AND pu.`status`    = \'connected\'
+                                           AND pu.`status`    = 'connected'
               WHERE r.`id` = ?
-              GROUP BY r.`id`
-              LIMIT 1',
+              GROUP BY r.`id`, r.`name`, r.`ip_address`, r.`snmp_community`, r.`snmp_version`,
+                       r.`snmp_port`, r.`username`, r.`password`, r.`router_os_version`,
+                       r.`identity`, r.`model`, r.`serial`, r.`uptime`, r.`status`,
+                       r.`created_at`, r.`updated_at`
+              LIMIT 1",
             [$id],
         );
     }

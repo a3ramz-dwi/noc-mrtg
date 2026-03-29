@@ -6,6 +6,7 @@ namespace NOC\Modules\Routers;
 
 use NOC\Core\Logger;
 use NOC\SNMP\SnmpManager;
+use NOC\Modules\Interfaces\InterfaceModel;
 
 /**
  * RouterService — Business-logic layer for router management.
@@ -18,15 +19,18 @@ use NOC\SNMP\SnmpManager;
  */
 final class RouterService
 {
-    private readonly RouterModel $model;
-    private readonly Logger      $logger;
+    private readonly RouterModel    $model;
+    private readonly Logger         $logger;
+    private readonly InterfaceModel $interfaceModel;
 
     public function __construct(
-        ?RouterModel $model  = null,
-        ?Logger      $logger = null,
+        ?RouterModel    $model          = null,
+        ?Logger         $logger         = null,
+        ?InterfaceModel $interfaceModel = null,
     ) {
-        $this->model  = $model  ?? new RouterModel();
-        $this->logger = $logger ?? Logger::getInstance();
+        $this->model          = $model          ?? new RouterModel();
+        $this->logger         = $logger         ?? Logger::getInstance();
+        $this->interfaceModel = $interfaceModel ?? new InterfaceModel();
     }
 
     // -------------------------------------------------------------------------
@@ -153,22 +157,65 @@ final class RouterService
     /**
      * Return a router row augmented with related-entity counts.
      *
+     * Falls back to a plain findById() result if the stats query fails,
+     * so the detail page still loads even without joined tables.
+     *
      * @param  int $id
      * @return array<string,mixed>|null
      */
     public function getRouterWithDetails(int $id): ?array
     {
-        return $this->model->findWithStats($id);
+        try {
+            $router = $this->model->findWithStats($id);
+        } catch (\Throwable $e) {
+            $this->logger->error('getRouterWithDetails: findWithStats failed, falling back to findById', [
+                'id'    => $id,
+                'error' => $e->getMessage(),
+            ]);
+            $router = $this->model->findById($id);
+        }
+
+        if ($router === null) {
+            return null;
+        }
+
+        // Ensure computed keys are always present with safe defaults.
+        $router['interface_count']    ??= 0;
+        $router['queue_count']        ??= 0;
+        $router['pppoe_active_count'] ??= 0;
+        $router['last_seen']          ??= $router['updated_at'] ?? null;
+
+        // Attach the full interface records for the detail view.
+        $router['interfaces'] = $this->interfaceModel->findByRouter($id);
+
+        return $router;
     }
 
     /**
      * Return all routers with status information and interface counts.
      *
+     * Falls back to findAll() when the stats query fails so that the
+     * router list page still renders (without interface counts).
+     *
      * @return array<int,array<string,mixed>>
      */
     public function listRouters(): array
     {
-        return $this->model->findAllWithStats();
+        try {
+            $routers = $this->model->findAllWithStats();
+        } catch (\Throwable $e) {
+            $this->logger->error('listRouters: findAllWithStats failed, falling back to findAll', [
+                'error' => $e->getMessage(),
+            ]);
+            $routers = $this->model->findAll();
+        }
+
+        // Ensure computed keys are always present with safe defaults.
+        return array_map(static function (array $router): array {
+            $router['interface_count'] ??= 0;
+            $router['last_seen']       ??= $router['updated_at'] ?? null;
+            return $router;
+        }, $routers);
     }
 
     // -------------------------------------------------------------------------
