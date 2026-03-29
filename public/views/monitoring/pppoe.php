@@ -62,6 +62,3 @@ $pageTitle = 'Monitoring — PPPoE';
     </div>
   </div>
 </div>
-
-<script src="<?= APP_URL ?>/assets/js/charts.js" defer></script>
-<script src="<?= APP_URL ?>/assets/js/live-traffic.js" defer></script>
