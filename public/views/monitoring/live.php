@@ -108,6 +108,3 @@ $pageTitle = 'Live Monitoring';
 @keyframes blink { 50% { opacity: 0; } }
 .blink { animation: blink 1s step-start infinite; }
 </style>
-
-<script src="<?= APP_URL ?>/assets/js/charts.js" defer></script>
-<script src="<?= APP_URL ?>/assets/js/live-traffic.js" defer></script>
