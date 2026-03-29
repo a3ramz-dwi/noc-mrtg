@@ -102,5 +102,4 @@ $pageTitle = 'Interface: ' . htmlspecialchars($interface['name'] ?? '');
 <script>
 const IF_ID = <?= (int) $interface['id'] ?>;
 </script>
-<script src="<?= APP_URL ?>/assets/js/charts.js" defer></script>
 <script src="<?= APP_URL ?>/assets/js/interface-manager.js" defer></script>
