@@ -186,7 +186,15 @@ final class RouterService
         $router['last_seen']          ??= $router['updated_at'] ?? null;
 
         // Attach the full interface records for the detail view.
-        $router['interfaces'] = $this->interfaceModel->findByRouter($id);
+        try {
+            $router['interfaces'] = $this->interfaceModel->findByRouter($id);
+        } catch (\Throwable $e) {
+            $this->logger->error('getRouterWithDetails: findByRouter failed, defaulting interfaces to empty array', [
+                'id'    => $id,
+                'error' => $e->getMessage(),
+            ]);
+            $router['interfaces'] = [];
+        }
 
         return $router;
     }
