@@ -33,9 +33,6 @@ $pageTitle = 'Discover Interfaces: ' . htmlspecialchars($router['name'] ?? '');
           <i class="fas fa-ethernet me-2 text-success"></i>
           Discovered Interfaces (<?= count($discovered) ?>)
         </h5>
-        <button type="button" class="btn btn-sm btn-primary" id="select-all-btn">
-          Select All
-        </button>
       </div>
       <div class="card-body p-0">
         <form method="POST" action="/interfaces/import" id="import-form">
