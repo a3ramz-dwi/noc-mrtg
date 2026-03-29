@@ -9,7 +9,7 @@ RewriteRule ^ - [L]
 
 # Deny access to sensitive files/dirs from root
 <FilesMatch "\.(env|log|sh|sql)$">
-    Deny from all
+    Require all denied
 </FilesMatch>
 
 # Deny direct access to sensitive directories (DirectoryMatch not allowed in .htaccess)
